@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Hello World Page {% endblock %}
+
+{% block body %}
+
+    <section>
+        <div class="container" style="padding: 3rem 0;">
+            <h2>{{ form_title }}</h2>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Product Code</th>
+                                <th>Count</th>
+                                <th>URL to update Product:</th>
+                                <th>URL to delete Product:</th>
+                                <th>State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.productcode }}</td>
+                                <td>{{ product.count }}</td>
+                                <td><a href="{{ update_url }}/{{ product.id }}">{{ update_url }}/{{ product.id }}</a></td>
+                                <td><a href="{{ update_url }}/delete/{{ product.id }}">delete {{ update_url }}/delete/{{ product.id }}</a></td>
+                                <td>{{ product.state }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+{#            {% for product in products %}#}
+{#            <div class="row">#}
+{#                <div class="alert alert-success col-6" role="alert">#}
+{#                    <hr>#}
+{#                    <h4 class="alert-heading">{{form_title}}</h4>#}
+
+{#                    <div class="form-group">#}
+{#                        <span  class="form-control">{{ product.productcode }}</span>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <span  class="form-control">{{ product.count }}</span>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <a href="{{ update_url }}/{{ product.id }}">update Product: {{ update_url }}/{{ product.id }}</a>#}
+{#                    </div>#}
+{#                    <hr>#}
+{#                </div>#}
+{#            </div>#}
+{#            {% endfor %}#}
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Hello World Page {% endblock %}
+
+{% block body %}
+
+    <section>
+        <div class="container">
+
+            <form action="{{ form_action }}" method="post">
+                <div class="row">
+                    <div class="input-group input-group-lg" style="padding: 3rem 0;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">Frame Params</span>
+                        </div>
+                        <input name="frame_height" type="number" class="form-control input-group-prepend" placeholder="height"
+                               aria-label="height" aria-describedby="basic-addon2">
+                        <input name="frame_width" type="number" class="form-control input-group-prepend" placeholder="width"
+                               aria-label="width" aria-describedby="basic-addon2">
+                        <input name="margin" type="number" class="form-control input-group-prepend" placeholder="margin"
+                               aria-label="margin" aria-describedby="basic-addon2">
+                        <input name="baguette_cod_id" type="number" class="form-control input-group-prepend" placeholder="baguette cod"
+                               aria-label="baguette cod" aria-describedby="basic-addon2">
+                        <input name="baguette_price" type="number" class="form-control input-group-prepend" placeholder="price"
+                               aria-label="price" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p class="mb-0">Calculate price: {{ calculate_price }}</p>
+        </div>
+    </section>
+
+{% endblock %}

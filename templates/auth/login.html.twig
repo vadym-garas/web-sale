@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme loginForm 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Register page {{ parent() }}{% endblock %}
+
+{% block content %}
+
+    <div class="card">
+
+        <h5 class="card-header info-color white-text text-center py-4">
+            <strong>Sign up</strong>
+        </h5>
+
+        <div class="card-body px-lg-5 pt-0">
+
+            {{ form_start(loginForm) }}
+{#            {{ form_row(loginForm.email, {label: 'E-mail'}) }}#}
+            {{ form_row(loginForm.plainPassword, {label: 'Password'}) }}
+
+            {{ form_row(loginForm.agreeTerms) }}
+
+            <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">
+                SignUp
+            </button> OR
+            <a href="/login">SignIn</a>
+            {{ form_end(loginForm) }}
+
+        </div>
+    </div>
+
+{% endblock %}
