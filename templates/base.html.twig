@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Frame order creator!{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="avrys">
+    <title>Web-Sale frame order creator</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {% block stylesheets %}
@@ -15,34 +18,25 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
+
 <body>
-<div class="container">
-    {% block body %}
-        <header>
-            <div class="container">
-                <div class="row">
+{% block body %}
 
-                    <div class="col-md-2">
-
-                        <!-- Image and text -->
-                        <nav class="navbar navbar-light bg-light">
-                            <a href="/"><img id="logo" src="https://cdn.logo.com/hotlink-ok/logo-social.png" width="64" height="32" alt="logo"></a>
-                        </nav>
-                    </div>
-                    <div class="col-md-10 rigght">
-                        {% block header %}{% endblock %}
-                    </div>
-                </div>
-            </div>
-        </header>
-        <div class="border"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2 bg-menu">{% block menu %}Test{% endblock %}</div>
-                <div class="col-md-10">{% block content %}{% endblock %}</div>
-            </div>
-        </div>
+    {% block header %}
     {% endblock %}
-</div>
+
+    {% block menu %}
+    {% endblock %}
+
+    {% block main %}
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+
+{#    {% block title %}{% endblock %}#}
+{#    {% block content %}{% endblock %}#}
+
+{% endblock %}
 </body>
 </html>

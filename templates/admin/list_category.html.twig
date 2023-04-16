@@ -4,8 +4,8 @@
 
 {% block content %}
     <div class="btn-group mr-2 float-right">
-        <a class="btn btn-primary btn-lg" data-toggle="collapse" href="/admin/product" role="button" aria-expanded="false" aria-controls="collapseExample">
-            + Add new Product
+        <a class="btn btn-primary btn-lg" data-toggle="collapse" href="/admin/category" role="button" aria-expanded="false" aria-controls="collapseExample">
+            + Add new Category
         </a>
     </div>
     <section style="padding: 3rem 0;">
@@ -15,26 +15,22 @@
                     <thead>
                         <tr>
                             <th>#ID</th>
-                            <th>Product Code</th>
-                            <th>Count</th>
-                            <th>Price</th>
-                            <th>URL to update Product:</th>
-                            <th>URL to delete Product:</th>
+{#                            <th>Category Code</th>#}
+                            <th>URL to update Category:</th>
+                            <th>URL to delete Category:</th>
                             <th>State</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for product in products %}
-                        <tr>
-                            <td>{{ product.id }}</td>
-                            <td>{{ product.code }}</td>
-                            <td>{{ product.count }}</td>
-                            <td>{{ product.price }}</td>
-                            <td><a href="{{ update_url }}/{{ product.id }}">{{ update_url }}/{{ product.id }}</a></td>
-                            <td><a href="{{ update_url }}/delete/{{ product.id }}">delete {{ update_url }}/delete/{{ product.id }}</a></td>
-                            <td>{{ state[product.state] }}</td>
-                        </tr>
-                    {% endfor %}
+                        {% for category in categories %}
+                            <tr>
+                                <td>{{ category.id }}</td>
+{#                                <td>{{ category.code }}</td>#}
+                                <td><a href="{{ update_url }}/{{ category.id }}">{{ update_url }}/{{ category.id }}</a></td>
+                                <td><a href="{{ update_url }}/delete/{{ category.id }}">delete {{ update_url }}/delete/{{ category.id }}</a></td>
+                                <td>{{ category.state }}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -57,6 +53,7 @@
 {#                </div>#}
 {#            </div>#}
 {#            {% endfor %}#}
+
     </section>
 
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\State;
 use App\Services\ProductService;
+use App\Services\CategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,7 @@ class AdminController extends AbstractController
 //        protected AbstractEntityService $urlService
 //    ){}
 
-    public function __construct(protected ProductService $productService)
+    public function __construct(protected ProductService $productService, protected CategoryService $categoryService)
     {
     }
 
@@ -40,6 +41,7 @@ class AdminController extends AbstractController
             $products = $this->productService->getAllProduct();
 
             $vars = $vars + [
+                    'state'=>array_flip(State::getArrStateConstant()),
                     'products'=>$products,
                     'update_url'=>$this->generateUrl('read_product'),
                 ];
@@ -54,6 +56,9 @@ class AdminController extends AbstractController
             $template = 'error.html.twig';
         }
 
+//        return $this->render($template, $vars+ [
+//                'form_action' =>$this->generateUrl('add_product')
+//            ]);
         return $this->render($template, $vars);
     }
 
@@ -114,7 +119,7 @@ class AdminController extends AbstractController
             $vars = $vars + [
                     'states' => State::getArrStateConstant(),
                     'state' => $product->getState(),
-                    'product_code' => $product->getProductCode(),
+                    'product_code' => $product->getCode(),
                     'category_id' => $product->getCategories(),
                     'count' => $product->getCount(),
                 ];
@@ -170,20 +175,23 @@ class AdminController extends AbstractController
     }
 
 
-    #[Route('/category/add', name: 'add_category', methods: ['get'])]
-    public function addCategoryAction(Request $request): Response
+    #[Route('/categories', name: 'all_category', methods: ['get'])]
+    public function allCategoryAction(Request $request): Response
     {
         $vars = [
-            'form_title' => 'Create new category'
+            'form_title' => 'All category table'
         ];
 
         try {
-            $response = new Response('Some data -- concatenation', 200);
+            $categories = $this->categoryService->getAllCategory();
 
             $vars = $vars + [
-                    'states' => State::getArrStateConstant()
+                    'state'=>array_flip(State::getArrStateConstant()),
+                    'categories'=>$categories,
+                    'update_url'=>''//$this->generateUrl('read_product'),
                 ];
-            $template = 'admin/card_category.html.twig';
+
+            $template = 'admin/list_category.html.twig';
 
         } catch (\Throwable $e) {
             $response = new Response($e->getMessage(), 400);
@@ -193,9 +201,44 @@ class AdminController extends AbstractController
             $template = 'error.html.twig';
         }
 
-        return $this->render($template, $vars + [
-            'form_action' => $this->generateUrl('new_category')
-        ]);
+        return $this->render($template, $vars);
     }
+
+
+    #[Route('/category', name: 'add_category', methods: ['get'])]
+    public function addCategoryAction(Request $request): Response
+    {
+        $vars = [
+            'form_title' => 'Create new Category',
+            'states' => State::getArrStateConstant(),
+            'state' => State::STATE_DISABLE,
+            'category_id' => '',
+        ];
+
+        $template = 'admin/card_category.html.twig';
+
+        return $this->render($template, $vars + [
+                'form_action' => $this->generateUrl('create_category')
+            ]);
+    }
+
+    #[Route('/category/create', name: 'create_category', methods: ['post'])]
+    public function createCategoryAction(Request $request): Response
+    {
+        try {
+            $this->categoryService->createCategory(function ($key) use ($request) {
+                return $request->request->get($key);
+            });
+
+            $response = $this->redirectToRoute('all_category');
+        } catch (\Throwable $e) {
+            $template = 'error.html.twig';
+            $response = $this->render($template, [
+                'error' => new Response($e->getMessage(), 400)
+            ]);
+        }
+        return $response;
+    }
+
 
 }

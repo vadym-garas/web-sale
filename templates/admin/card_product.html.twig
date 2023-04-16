@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin_layout.html.twig' %}
 
 {% block title %} Hello World Page {% endblock %}
 
-{% block body %}
+{% block content %}
 
     <section>
         <div class="container" style="padding: 3rem 0;">
@@ -40,21 +40,7 @@
                         </div>
                         <hr>
 <br>
-{#                        <div class="input-group mb-3">#}
-{#                            <div class="input-group-prepend">#}
-{#                                <label class="input-group-text" for="inputGroupSelect01">Select state</label>#}
-{#                            </div>#}
-{#                            <select name="state" class="custom-select" id="inputGroupProductStateSelect">#}
-{#                                {% for key,value in states %}#}
-{#                                    {% set selected = '' %}#}
-{#                                    {% if (state == value) %}#}
-{#                                        {% set selected = 'selected' %}#}
-{#                                    {% endif %}#}
 
-{#                                    <option {{ selected }} value={{ value }}>{{ key }}</option>#}
-{#                                {% endfor %}#}
-{#                            </select>#}
-{#                        </div>#}
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>

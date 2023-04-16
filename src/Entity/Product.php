@@ -4,9 +4,9 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+//use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\StateTrait;
-use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 
 
@@ -17,41 +17,57 @@ class Product
     #[ORM\Id]
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\GeneratedValue]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 64)]
-    private string $product_code = '';
+    private ?string $code = null;
+
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
 
     #[ORM\Column(type: Types::INTEGER)]
-    private int $count = 0;
+    private ?int $price = null;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Category::class)]
-    public Collection $categories;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $count = null;
+
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'products')]
+    private Collection $categories;
+
+    #[ORM\OneToOne(inversedBy: 'product', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Unit $unit = null;
 
     use StateTrait;
 
 
-    public function __construct(string $product_code='', int $count=0, int $state=State::STATE_DISABLE)
-    {
-        $this->product_code = $product_code;
+    public function __construct(
+        int $state=State::STATE_DISABLE,
+        string $code=null,
+        string $name=null,
+        string $description=null,
+        string $price=null,
+        int $count=null
+    ) {
+        $this->code = $code;
         $this->count = $count;
         $this->state = $state;
 
-//        $this->categories = new ArrayCollection();
-//        $this->addCategory(new Category());
+        $this->categories = new ArrayCollection();
     }
 
-    public static function getClassVars(): array
-    {
-        return get_class_vars(__CLASS__);
-    }
-
-    public function setField(string $name, mixed $value): void
-    {
-        $this->$name = $value;
-    }
-
-
+//    public static function getClassVars(): array
+//    {
+//        return get_class_vars(__CLASS__);
+//    }
+//
+//    public function setField(string $name, mixed $value): void
+//    {
+//        $this->$name = $value;
+//    }
 
     /**
      * @return int
@@ -64,9 +80,9 @@ class Product
     /**
      * @return string|null
      */
-    public function getProductCode(): ?string
+    public function getCode(): ?string
     {
-        return $this->product_code;
+        return $this->code;
     }
 
     /**
@@ -78,16 +94,17 @@ class Product
     }
 
     /**
-     * @return Collection<int, Category>
+     * @return int|null
      */
-    public function getCategories(): Collection
+    public function getPrice(): ?int
     {
-        return $this->categories;
+        return $this->price;
     }
 
-    public function setProductCode(string $product_code=""): self
+
+    public function setCode(string $code=""): self
     {
-        $this->product_code = $product_code;
+        $this->code = $code;
 
         return $this;
     }
@@ -99,11 +116,18 @@ class Product
         return $this;
     }
 
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
     public function addCategory(Category $category): self
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
-            $category->setProduct($this);
         }
 
         return $this;
@@ -111,12 +135,19 @@ class Product
 
     public function removeCategory(Category $category): self
     {
-        if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getProduct() === $this) {
-                $category->setProduct(null);
-            }
-        }
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    public function getUnit(): ?Unit
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(Unit $unit): self
+    {
+        $this->unit = $unit;
 
         return $this;
     }

@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     const ROLE_USER = 'ROLE_USER';
+    const ROLE_MANAGER = 'ROLE_MANAGER';
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
     use StateTrait;

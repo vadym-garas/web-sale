@@ -17,21 +17,23 @@ class Category
     #[ORM\GeneratedValue]
     private int $id;
 
-    #[ORM\Column(type: Types::INTEGER)]
-    #[Assert\NotBlank]
-    private int $name_id;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private ?string $name = null;
 
-//    #[ORM\ManyToOne(inversedBy: 'categories')]
-//    private ?Product $product = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'categories')]
+    private Collection $products;
 
     use StateTrait;
 
-    public function __construct($name_id=0, $product=null, $state=State::STATE_DISABLE)
+    public function __construct($state=State::STATE_DISABLE)
     {
-        $this->name_id = $name_id;
         $this->state = $state;
-    }
 
+        $this->products = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -41,14 +43,29 @@ class Category
         return $this->id;
     }
 
-    public function getProduct(): ?Product
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
     {
-        return $this->product;
+        return $this->products;
     }
 
-    public function setProduct(?Product $product): self
+    public function addProduct(Product $product): self
     {
-        $this->product = $product;
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            $product->removeCategory($this);
+        }
 
         return $this;
     }

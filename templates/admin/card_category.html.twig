@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin_layout.html.twig' %}
 
 {% block title %} Hello World Page {% endblock %}
 
-{% block body %}
+{% block content %}
 
     <section>
         <div class="container" style="padding: 3rem 0;">
@@ -15,16 +15,36 @@
                             <input name="category_name" type="text" class="form-control input-group-prepend" placeholder="input category name">
                         </div>
 
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="inputGroupSelect01">Select parent category</label>
-                            </div>
-                            <select name="category_name"  class="custom-select">
-                                {% for key,value in categories %}
-                                    <option value={{ value }}>{{ key }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+{#                        <div class="input-group mb-3">#}
+{#                            <div class="input-group-prepend">#}
+{#                                <label class="input-group-text" for="inputGroupSelect01">Select parent category</label>#}
+{#                            </div>#}
+{#                            <select name="category_name"  class="custom-select">#}
+{#                                {% for key,value in categories %}#}
+{#                                    <option value={{ value }}>{{ key }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+{#                        </div>#}
+
+
+                        <br>
+                        <hr>
+                        <b><legend class="col-form-label">Select state</legend></b>
+{#                        <div class="input-group">#}
+{#                            {% for key,value in states %}#}
+{#                                {% set checked = '' %}#}
+{#                                {% if (state == value) %}#}
+{#                                    {% set checked = 'checked' %}#}
+{#                                {% endif %}#}
+{#                                <div class="form-check form-check-inline">#}
+{#                                    <label class="form-check-label">#}
+{#                                        <input {{ checked }} value={{ value }} class="form-check-input" type="radio" name="state" id={{ value }}>#}
+{#                                        {{ key }}#}
+{#                                    </label>#}
+{#                                </div>#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="inputGroupSelect01">Select state</label>
@@ -35,6 +55,9 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <hr>
+                        <br>
+
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>

@@ -37,7 +37,7 @@ class ProductService extends AbstractEntityService
             $product = new Product();
 
             $product
-                ->setProductCode((string)$getParam('product_code'))
+                ->setCode((string)$getParam('product_code'))
                 ->setState((int)$getParam('state'))
                 ->setCount((int)$getParam('count'));
 
@@ -66,7 +66,7 @@ class ProductService extends AbstractEntityService
 //            }
 
             $product
-                ->setProductCode((string)$getParam('product_code'))
+                ->setCode((string)$getParam('product_code'))
                 ->setState((int)$getParam('state'))
                 ->setCount((int)$getParam('count'));
 
@@ -79,7 +79,7 @@ class ProductService extends AbstractEntityService
     }
 
 
-    public function deleteProductById(int $product_id)
+    public function deleteProductById(int $product_id): void
     {
         try {
             $product = $this->getProductById($product_id);
@@ -104,7 +104,7 @@ class ProductService extends AbstractEntityService
         try {
             return $this->repository->findOneBy(['id' => $id]);
         } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $id);
+            throw new DataNotFoundException('Product not found by code from ProductService getProductById = ' . $id);
         }
     }
 
