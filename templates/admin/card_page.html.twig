@@ -11,29 +11,46 @@
 
     <div class="form-group input-group">
         <div class="input-group-prepend">
-            <span class="input-group-text">Название категории</span>
+            <span class="input-group-text">Название страницы</span>
         </div>
-        <input name="name" value="{{ name }}" type="text" class="form-control input-group-prepend" placeholder="input category name">
+        <input name="name" value="{{ name }}" type="text" class="form-control input-group-prepend" placeholder="input page name">
     </div>
 
     <br>
     <hr>
-    <b><legend class="col-form-label">Выбрать единицу измерения</legend></b>
+    <b><legend class="col-form-label">Выбрать категории для калькуляции</legend></b>
 
     <div class="input-group">
-        {% for key,value in units %}
+        {% for category in categories %}
             {% set checked = '' %}
-            {% if (unit == value) %}
-                {% set checked = 'checked' %}
-            {% endif %}
+            {% for select in selected %}
+                {% if (category.getId==select) %}
+                    {% set checked = 'checked' %}
+                {% endif %}
+            {% endfor %}
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input {{ checked }} value={{ value }} class="form-check-input" type="radio" name="unit">
-                    {{ key }}
+                    <input {{ checked }} type="checkbox" name="choices[]" value="{{ category.getId() }}" class="form-check-input">
+                    {{ category.getName() }}
                 </label>
             </div>
         {% endfor %}
     </div>
+
+{#    <div class="input-group">#}
+{#        {% for key,value in units %}#}
+{#            {% set checked = '' %}#}
+{#            {% if (unit == value) %}#}
+{#                {% set checked = 'checked' %}#}
+{#            {% endif %}#}
+{#            <div class="form-check form-check-inline">#}
+{#                <label class="form-check-label">#}
+{#                    <input {{ checked }} value={{ value }} class="form-check-input" type="radio" name="unit">#}
+{#                    {{ key }}#}
+{#                </label>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
     <br>
     <hr>
     <b><legend class="col-form-label">Select state</legend></b>
@@ -59,10 +76,5 @@
     </div>
 
 </form>
-
-    </section>
-
-</form>
-
 
 {% endblock %}

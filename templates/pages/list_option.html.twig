@@ -1,14 +1,27 @@
-{% extends 'admin/admin_layout.html.twig' %}
+{% extends 'pages/layout.html.twig' %}
 
 {% block title %} Hello World Page {% endblock %}
 
 {% block content %}
     <div class="btn-group mr-2 float-right">
-        <form name="form_action" action="{{ form_action }}" method="GET">
-            <div class="btn-group mr-2 float-right">
-                <button type="submit" class="btn btn-primary btn-lg">{{ btn_submit }}</button>
+
+        <form name="form_action" action="{{ form_action }}" method="post">
+            <div class="form-group">
+                <input name="category_name" type="text" class="form-control input-group-prepend" placeholder="input category name">
             </div>
+            <hr>
+            <br>
+            <button type="submit" class="btn btn-primary">+ Add new Category Option</button>
         </form>
+
+
+
+{#        <form>#}
+{#            <a class="btn btn-primary btn-lg" data-toggle="collapse" href="/admin/category" role="button" aria-expanded="false" aria-controls="collapseExample">#}
+{#                + Add new Category#}
+{#            </a>#}
+{#        </form>#}
+
     </div>
     <section style="padding: 3rem 0;">
         <h2>{{ form_title }}</h2>
@@ -16,23 +29,21 @@
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th>Позиция</th>
                             <th>#ID</th>
-                            <th>Category Name</th>
-                            <th>Редактировать категорию</th>
-                            <th>Удалить категорию</th>
-                            <th>Статус</th>
+{#                            <th>Category Code</th>#}
+                            <th>URL to update Category:</th>
+                            <th>URL to delete Category:</th>
+                            <th>State</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for category in categories %}
                             <tr>
-                                <td style="width: 75px;"><input style="width: inherit;" value="{{ category.getOrderRange }}"></td>
                                 <td>{{ category.id }}</td>
-                                <td>{{ category.name }}</td>
+{#                                <td>{{ category.code }}</td>#}
                                 <td><a href="{{ update_url }}/{{ category.id }}">{{ update_url }}/{{ category.id }}</a></td>
-                                <td><a href="{{ update_url }}/{{ category.id }}/delete">delete {{ update_url }}/{{ category.id }}/delete</a></td>
-                                <td>{{ states[category.state] }}</td>
+                                <td><a href="{{ update_url }}/delete/{{ category.id }}">delete {{ update_url }}/delete/{{ category.id }}</a></td>
+                                <td>{{ category.state }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

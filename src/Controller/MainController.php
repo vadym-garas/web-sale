@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 
+use App\Entity\State;
 use App\FrameCalculator\Interfaces\ICalculateFrame;
 use App\Services\AbstractEntityService;
+use App\Services\CategoryService;
+use App\Services\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,13 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 //#[Route('/category')]
 class MainController extends AbstractController
 {
-    /**
-     * @param ICalculateFrame $calcFrame
-     */
     public function __construct(
-        protected ICalculateFrame $calculator,
-//        protected AbstractEntityService $calcService
+        protected ProductService $productService,
+        protected CategoryService $categoryService,
+        // protected ICalculateFrame $calculator,
     ){}
+
 
     #[Route('/hello/{test}', requirements: ['test' => '(\w+)?'], methods: ['GET'])]
     public function helloAction($test): Response
@@ -83,7 +85,33 @@ class MainController extends AbstractController
     #[Route('/', methods: ['GET'])]
     public function mainAction(): Response
     {
-        //        return new Response('<html><content><h1>Hello World!</h1></content></html>');
-        return $this->render('pages/main.html.twig');
+
+        $vars = [
+            'form_title' => 'Baguette Category Constructor',
+            'btn_submit' => '+ Add new Product',
+        ];
+
+        try {
+            $categories = $this->categoryService->getAllCategory();
+
+            $vars = $vars + [
+                    'state'=>array_flip(State::getArrStateConstant()),
+                    'categories'=>$categories,
+                ];
+
+
+            $template = 'pages/main.html.twig';
+
+        } catch (\Throwable $e) {
+            $response = new Response($e->getMessage(), 400);
+            $vars = $vars + [
+                    'error' => $response
+                ];
+            $template = 'error.html.twig';
+        }
+
+        return $this->render($template, $vars+ [
+
+            ]);
     }
 }

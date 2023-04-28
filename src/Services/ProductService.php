@@ -2,16 +2,14 @@
 
 namespace App\Services;
 
+use App\Entity\Category;
 use App\Entity\Product;
-use App\Entity\Product as ProductEntity;
 
 use App\Entity\User;
 use App\Exceptions\DataNotFoundException;
 use App\Exceptions\ObjectCantSaveException;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ObjectRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Callback;
 
 
 class ProductService extends AbstractEntityService
@@ -33,49 +31,46 @@ class ProductService extends AbstractEntityService
      */
     public function createProduct(\Closure $getParam): Product
     {
-        try {
-            $product = new Product();
+//        try {
+        $product = new Product();
 
-            $product
-                ->setCode((string)$getParam('product_code'))
-                ->setState((int)$getParam('state'))
-                ->setCount((int)$getParam('count'));
+        $product
+            ->setCode((string)$getParam('code'))
+            ->setName((string)$getParam('name'))
+            ->setPrice((int)$getParam('price'))
+            ->setCost((int)$getParam('cost'))
+            ->setState((int)$getParam('state'))
+            ->setOrderRange(0);
 
-            $this->save($product);
+        $this->save($product);
 
             return $product;
-        } catch (\Exception $e) {
-            throw new ObjectCantSaveException('Product not saved', previous: $e);
-        }
+//        } catch (\Exception $e) {
+//            throw new ObjectCantSaveException('Product not saved', previous: $e);
+//        }
     }
 
 
-    public function updateProductById(int $product_id, \Closure $getParam): Product
+    public function updateProductById(\Closure $getParam, Category $currCategory, int $product_id=0): Product
     {
-        try {
-            $product = $this->getProductById($product_id);
-
-//            $fields = Product::getClassVars();
+        $product = $this->getProductById($product_id);
+        $product
+            ->setCode((string)$getParam('code'))
+            ->setName((string)$getParam('name'))
+            ->setPrice((int)$getParam('price'))
+            ->setCost((int)$getParam('cost'))
+            ->setState((int)$getParam('state'))
+            ->setOrderRange(0)
+            ->setCategory($currCategory);
 //
-//            foreach ($fields as $key => $value) {
-//
-//                if ($getParam($key)) {
-//
-//                    $product->setField($key, $fields[$key]);
-//                }
-//            }
+//            echo 'product name ' . $product->getName();
 
-            $product
-                ->setCode((string)$getParam('product_code'))
-                ->setState((int)$getParam('state'))
-                ->setCount((int)$getParam('count'));
-
-            $this->save($product);
+        $this->save($product);
 
             return $product;
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
-        }
+//        } catch (\Throwable) {
+//            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
+//        }
     }
 
 
@@ -90,21 +85,21 @@ class ProductService extends AbstractEntityService
         }
     }
 
+    public function getProductById(int $id): Product
+    {
+//        try {
+        return $this->repository->findOneBy(['id' => $id]);
+//        } catch (\Throwable) {
+//            throw new DataNotFoundException('Product not found by code from ProductService getProductById = ' . $id);
+//        }
+    }
+
     public function getProductByCode(string $code): Product
     {
         try {
             return $this->repository->findOneBy(['code' => $code]);
         } catch (\Throwable) {
             throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $code);
-        }
-    }
-
-    public function getProductById(int $id): Product
-    {
-        try {
-            return $this->repository->findOneBy(['id' => $id]);
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService getProductById = ' . $id);
         }
     }
 
@@ -118,13 +113,23 @@ class ProductService extends AbstractEntityService
         }
     }
 
+//    public function getProductsByCategoryId($category_id): array
+//    {
+//        try {
+//            return $this->repository->findBy(['category_id' => '3']);//     (['category_id' => $category_id], ['id' => 'ASC']);
+//        } catch (\Throwable) {
+//            echo 'throw';
+//            throw new DataNotFoundException('Data not found by code');
+//        }
+//    }
+
     public function getAllProduct(): array
     {
-        try {
+//        try {
             return $this->repository->findAll();
-        } catch (\Throwable) {
-            echo 'throw';
-            throw new DataNotFoundException('Data not found by code');
-        }
+//        } catch (\Throwable) {
+//            echo 'throw';
+//            throw new DataNotFoundException('Data not found by code');
+//        }
     }
 }

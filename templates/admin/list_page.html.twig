@@ -18,21 +18,21 @@
                         <tr>
                             <th>Позиция</th>
                             <th>#ID</th>
-                            <th>Category Name</th>
-                            <th>Редактировать категорию</th>
-                            <th>Удалить категорию</th>
+                            <th>Название страницы</th>
+                            <th>Редактировать страницу</th>
+                            <th>Удалить страницу</th>
                             <th>Статус</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for category in categories %}
+                        {% for page in pages %}
                             <tr>
-                                <td style="width: 75px;"><input style="width: inherit;" value="{{ category.getOrderRange }}"></td>
-                                <td>{{ category.id }}</td>
-                                <td>{{ category.name }}</td>
-                                <td><a href="{{ update_url }}/{{ category.id }}">{{ update_url }}/{{ category.id }}</a></td>
-                                <td><a href="{{ update_url }}/{{ category.id }}/delete">delete {{ update_url }}/{{ category.id }}/delete</a></td>
-                                <td>{{ states[category.state] }}</td>
+                                <td style="width: 75px;"><input style="width: inherit;" value="{{ page.getOrderRange }}"></td>
+                                <td>{{ page.id }}</td>
+                                <td>{{ page.name }}</td>
+                                <td><a href="{{ update_url }}/{{ page.id }}">{{ update_url }}/{{ page.id }}</a></td>
+                                <td><a href="{{ update_url }}/{{ page.id }}/delete">delete {{ update_url }}/{{ page.id }}/delete</a></td>
+                                <td>{{ states[page.state] }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

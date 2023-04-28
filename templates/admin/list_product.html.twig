@@ -4,9 +4,11 @@
 
 {% block content %}
     <div class="btn-group mr-2 float-right">
-        <a class="btn btn-primary btn-lg" data-toggle="collapse" href="/admin/product" role="button" aria-expanded="false" aria-controls="collapseExample">
-            + Add new Product
-        </a>
+        <form name="form_action" action="{{ form_action }}" method="GET">
+            <div class="btn-group mr-2 float-right">
+                <button type="submit" class="btn btn-primary btn-lg">{{ btn_submit }}</button>
+            </div>
+        </form>
     </div>
     <section style="padding: 3rem 0;">
         <h2>{{ form_title }}</h2>
@@ -14,9 +16,9 @@
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
+                            <th>Позиция</th>
                             <th>#ID</th>
                             <th>Product Code</th>
-                            <th>Count</th>
                             <th>Price</th>
                             <th>URL to update Product:</th>
                             <th>URL to delete Product:</th>
@@ -26,13 +28,13 @@
                     <tbody>
                     {% for product in products %}
                         <tr>
+                            <td style="width: 75px;"><input style="width: inherit;" value="{{ product.getOrderRange }}"></td>
                             <td>{{ product.id }}</td>
                             <td>{{ product.code }}</td>
-                            <td>{{ product.count }}</td>
                             <td>{{ product.price }}</td>
                             <td><a href="{{ update_url }}/{{ product.id }}">{{ update_url }}/{{ product.id }}</a></td>
-                            <td><a href="{{ update_url }}/delete/{{ product.id }}">delete {{ update_url }}/delete/{{ product.id }}</a></td>
-                            <td>{{ state[product.state] }}</td>
+                            <td><a href="{{ update_url }}/{{ product.id }}/delete">delete {{ update_url }}/{{ product.id }}/delete</a></td>
+                            <td>{{ states[product.state] }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

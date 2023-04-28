@@ -7,41 +7,193 @@
 
     {% block header %}
         <header>
-            <!-- Fixed navbar -->
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <a class="navbar-brand" href="#">Fixed navbar</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#">Disabled</a>
-                        </li>
-                    </ul>
-                    <form class="form-inline mt-2 mt-md-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
-                </div>
-            </nav>
+            <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+                <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+                <nav class="my-2 my-md-0 mr-md-3">
+{#                    <a class="p-2 text-dark" href="#">Features</a>#}
+{#                    <a class="p-2 text-dark" href="#">Enterprise</a>#}
+{#                    <a class="p-2 text-dark" href="#">Support</a>#}
+{#                    <a class="p-2 text-dark" href="#">Pricing</a>#}
+                </nav>
+                <a class="btn btn-outline-primary" href="#">Sign up</a>
+            </div>
         </header>
     {% endblock %}
 
-{#    {% block menu %}#}
-{#    {% endblock %}#}
+    {#    {% block title %}{% endblock %}#}
+
 
     {% block main %}
+
         <main role="main" class="container">
-            <h1 class="mt-5">Sticky footer with fixed navbar</h1>
-            <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with <code>padding-top: 60px;</code> on the <code>body &gt; .container</code>.</p>
-            <p>Back to <a href="../sticky-footer/">the default sticky footer</a> minus the navbar.</p>
+
+            <div class="card text-center">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">багетная рамка</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">алюминивая рамка</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">клик рамка</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">антирама</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">холст</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Высота мм</span>
+                                    </div>
+                                    <input type="number" class="form-control" aria-label="Large" id="height" placeholder="0" value="">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Ширина мм</span>
+                                    </div>
+                                    <input type="number" class="form-control" aria-label="Large" id="width" placeholder="0" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for category in categories %}
+                        <hr>
+                        {% if  category.getId == '3' %}
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                                    <div class="input-group input-group-lg">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="category_{{ category.getId() }}">код багета</label>
+                                        </div>
+                                        <select name="state"  class="custom-select" id="category_{{ category.getId() }}">
+                                            {% for product in category.getProducts() %}
+                                                <option value="product.getId()">{{ product.getName() }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                                    <div class="input-group input-group-lg">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Цена багета</span>
+                                        </div>
+                                        <input type="number" class="form-control" aria-label="Large" id="product_price" placeholder="0" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="form-group row">
+                            <label for="category_{{ category.getId() }}" class="col-sm-2 col-form-label">{{ category.getName() }}</label>
+                            <div class="col-sm-10">
+                                <div id="category_{{ category.getId() }}" class="btn-group" role="group">
+                                    {% for product in category.getProducts() %}
+                                        <button type="button" class="btn btn-secondary">{{ product.getName() }}</button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    {% endfor %}
+                    <hr>
+                </div>
+
+                <section>
+                    <div class="form-group">
+                        <h1 class="mt-5">Sticky footer with fixed navbar</h1>
+                    </div>
+                </section>
+
+                {% block content %}
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">сумма без скидки</span>
+                                </div>
+                                <div class="form-control" id="all-cost">0.00</div>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">скидка процент</span>
+                                </div>
+                                <input type="number" class="form-control" aria-label="Large" name="discount-l" id="discount-l" placeholder="0%" value="" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">Количество штук</span>
+                                </div>
+                                <input type="number" class="form-control" aria-label="Large" name="amount" id="amount" placeholder="1 шт" value="" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">сумма со скидкой</span>
+                                </div>
+                                <div class="form-control" id="with-discount">0.00</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">скидка сумма</span>
+                                </div>
+                                <input type="number" class="form-control" aria-label="Large" name="discount-r" id="discount-r" placeholder="0.00" value="" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">общая стоимость</span>
+                                </div>
+                                <div class="form-control" id="val">0.00</div>
+                            </div>
+                        </div>
+
+                        <section  style="width: 100vw;">
+                            <br>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-outline-primary">рассчитать заказ</button>
+                                <button type="button" class="btn btn-outline-danger">очистить</button>
+                                <button type="button" class="btn btn-outline-success">оформить заказ</button>
+                            </div>
+
+                        </section>
+
+                    </div>
+                </div>
+
+            </div>
+            </div>
+
+            {% endblock %}
+
         </main>
     {% endblock %}
 
@@ -53,7 +205,7 @@
         </footer>
     {% endblock %}
 
-    {#    {% block title %}{% endblock %}#}
-    {#    {% block content %}{% endblock %}#}
+
+
 
 {% endblock %}

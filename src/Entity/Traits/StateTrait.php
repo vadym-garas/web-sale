@@ -2,7 +2,11 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\Category;
+use App\Entity\Page;
+use App\Entity\Product;
 use App\Entity\State;
+use App\Entity\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\This;
@@ -10,12 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait StateTrait
 {
-//    const STATE_DISABLE = 0;
-//    const STATE_ENABLE = 1;
-//    const STATE_HIDDEN = 2;
-
     #[ORM\Column(type: Types::SMALLINT)]
-//    #[Assert\Choice(0,1,2)]
+//  #[Assert\Choice(0,1,2)]
     private int $state = State::STATE_DISABLE;
 
     /**
@@ -60,8 +60,9 @@ trait StateTrait
 
     /**
      * @param int $state
+     * @return User|Category|Page|Product|StateTrait
      */
-    public function setState(int $state=State::STATE_DISABLE): object
+    public function setState(int $state=State::STATE_DISABLE): self
     {
         $this->state = $state;
 

@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-//use App\Repository\ProductRepository;
+use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\RangeTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\StateTrait;
 use Doctrine\DBAL\Types\Types;
@@ -19,55 +18,33 @@ class Product
     #[ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 64)]
-    private ?string $code = null;
-
     #[ORM\Column(type: Types::STRING, length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    private ?string $code = '';
 
     #[ORM\Column(type: Types::INTEGER)]
-    private ?int $price = null;
+    private ?int $price = 0;
 
     #[ORM\Column(type: Types::INTEGER)]
-    private ?int $count = null;
+    private ?int $cost = 0;
 
-    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'products')]
-    private Collection $categories;
-
-    #[ORM\OneToOne(inversedBy: 'product', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Unit $unit = null;
+    #[ORM\ManyToOne(targetEntity: Category::class, cascade: ['persist', 'remove'])]
+    private ?Category $category = null;
 
     use StateTrait;
-
+    use NameTrait;
+    use RangeTrait;
 
     public function __construct(
-        int $state=State::STATE_DISABLE,
-        string $code=null,
-        string $name=null,
-        string $description=null,
-        string $price=null,
-        int $count=null
+        string $code='',
+        int $price=0,
+        int $cost=0
     ) {
         $this->code = $code;
-        $this->count = $count;
-        $this->state = $state;
+        $this->price = $price;
+        $this->cost = $cost;
 
-        $this->categories = new ArrayCollection();
+        $this->category = new Category();
     }
-
-//    public static function getClassVars(): array
-//    {
-//        return get_class_vars(__CLASS__);
-//    }
-//
-//    public function setField(string $name, mixed $value): void
-//    {
-//        $this->$name = $value;
-//    }
 
     /**
      * @return int
@@ -88,9 +65,9 @@ class Product
     /**
      * @return int|null
      */
-    public function getCount(): ?int
+    public function getCost(): ?int
     {
-        return $this->count;
+        return $this->cost;
     }
 
     /**
@@ -101,53 +78,39 @@ class Product
         return $this->price;
     }
 
-
-    public function setCode(string $code=""): self
+    /**
+     * @param string $code
+     * @return $this
+     */
+    public function setCode(string $code=''): self
     {
         $this->code = $code;
 
         return $this;
     }
 
-    public function setCount(int $count=0): self
+    public function setCost(int $cost=0): self
     {
-        $this->count = $count;
+        $this->cost = $cost;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Category>
-     */
-    public function getCategories(): Collection
+    public function setPrice(int $price=0): self
     {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories->add($category);
-        }
+        $this->price = $price;
 
         return $this;
     }
 
-    public function removeCategory(Category $category): self
+    public function getCategory(): ?Category
     {
-        $this->categories->removeElement($category);
-
-        return $this;
+        return $this->category;
     }
 
-    public function getUnit(): ?Unit
+    public function setCategory(?Category $category): self
     {
-        return $this->unit;
-    }
-
-    public function setUnit(Unit $unit): self
-    {
-        $this->unit = $unit;
+        $this->category = $category;
 
         return $this;
     }

@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Entity\Category;
-use App\Entity\Category as CategoryEntity;
-
 use App\Exceptions\DataNotFoundException;
 use App\Exceptions\ObjectCantSaveException;
 use App\Repository\CategoryRepository;
@@ -30,19 +28,24 @@ class CategoryService extends AbstractEntityService
      */
     public function createCategory(\Closure $getParam): Category
     {
-        try {
+//        try {
             $category = new Category();
 
-            $category
-//                ->setProductId((int)$getParam('product_id'))
-                ->setState((int)$getParam('state'));
+//            $category
+//                ->setName((string)$getParam('name'))
+//                ->setState((int)$getParam('state'))
+            ;
+
+//            $phoneObject = new Phone($user, $phone);
+//            $this->em->persist($phoneObject);
+//            $this->em->flush();
 
             $this->save($category);
 
             return $category;
-        } catch (\Exception $e) {
-            throw new ObjectCantSaveException('Category not saved', previous: $e);
-        }
+//        } catch (\Exception $e) {
+//            throw new ObjectCantSaveException('Category not saved', previous: $e);
+//        }
     }
 
 
@@ -52,7 +55,8 @@ class CategoryService extends AbstractEntityService
             $category = $this->getCategoryById($category_id);
 
             $category
-//                ->setNameId((int)$getParam('name_id'))
+                ->setName((string)$getParam('name'))
+                ->setUnit((int)$getParam('unit'))
                 ->setState((int)$getParam('state'));
 
             $this->save($category);
@@ -94,4 +98,45 @@ class CategoryService extends AbstractEntityService
         }
     }
 
+    public function getArrValueCategoryDetail(): array
+    {
+        $categories = $this->getAllCategory();
+        $arrTemp = [];
+
+        foreach ($categories as $category) {
+            $arrTemp[$category->getId()] = $category->getName();
+        }
+        return $arrTemp;
+    }
+
+//    public function getArrPropertyFromCategory(string $property): array
+//    {
+//        $categories = $this->getAllCategory();
+//        $arrProperty = [];
+//
+//        $arrProperty['Товары без категории'] = Category::WITHOUT_CATEGORY;
+//
+//        foreach ($categories as $category) {
+//            if(property_exists($category, $property)) {
+//
+//                $key = $category->getValueByKey($property);
+//                $value = $category->getId();
+//                $arrProperty[$key] = $value;
+//            }
+//        }
+//        print_r($arrProperty);
+//
+//        return $arrProperty;
+//    }
+
+    public function getIfPropertyExist(Category $category, string $property): mixed
+    {
+        $key = $category->getPropertyByName($property);
+        $value = $category->getId();
+        $categories[$key] = $value;
+
+        echo $key.'; '.$value;
+
+        return $categories[$key];
+    }
 }

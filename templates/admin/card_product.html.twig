@@ -4,48 +4,99 @@
 
 {% block content %}
 
-    <section>
-        <div class="container" style="padding: 3rem 0;">
-            <div class="row">
-                <div class="alert alert-success col-6" role="alert">
-                    <h4 class="alert-heading">{{form_title}}</h4>
-                    <hr>
-                    <form name="form_action" action="{{ form_action }}" method="post">
-                        <div class="form-group">
-                            <input name="product_code" value="{{ product_code }}" type="text" class="form-control input-group-prepend" placeholder="input product code">
-                        </div>
-                        <div class="form-group">
-                            <input name="category_id" type="number" class="form-control input-group-prepend" placeholder="input category id">
-                        </div>
-                        <div class="form-group">
-                            <input name="count" type="number" value="{{ count }}" class="form-control input-group-prepend" placeholder="input product count">
-                        </div>
+    <section style="padding: 3rem 0;">
 
-<br>
-                        <hr>
-                        <b><legend class="col-form-label">Select state</legend></b>
-                        <div class="input-group">
-                            {% for key,value in states %}
-                            {% set checked = '' %}
-                            {% if (state == value) %}
-                                {% set checked = 'checked' %}
-                            {% endif %}
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input {{ checked }} value={{ value }} class="form-check-input" type="radio" name="state" id={{ value }}>
-                                        {{ key }}
-                                    </label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <hr>
-<br>
+        <h4 name="form_title" class="alert-heading">{{ form_title }}</h4>
+        <hr>
+        <form name="form_action" action="{{ form_action }}" method="post">
+{#            {{ form_start(form) }}#}
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
+            <b><legend class="col-form-label">Выбрать категорию товара</legend></b>
+            <div class="input-group">
+                {% for key,value in categories %}
+                    {% set checked = '' %}
+                    {% if (select == key) %}
+                        {% set checked = 'checked' %}
+                    {% endif %}
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                            <input {{ checked }} value={{ key }} class="form-check-input" type="radio" name="categories">
+                            {{ value }}
+                        </label>
+                    </div>
+                {% endfor %}
+{#                {% for category in categories %}#}
+{#                    {% set checked = '' %}#}
+{#                    {% if (select == category.getId()) %}#}
+{#                        {% set checked = 'checked' %}#}
+{#                    {% endif %}#}
+{#                    <div class="form-check form-check-inline">#}
+{#                        <label class="form-check-label">#}
+{#                            <input {{ checked }} value={{ category.getId() }} class="form-check-input" type="radio" name="categories">#}
+{#                            {{ category.getName() }}#}
+{#                        </label>#}
+{#                    </div>#}
+{#                {% endfor %}#}
             </div>
-        </div>
+            <hr>
+
+
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Артикул товара</span>
+                </div>
+                <input name="code" value="{{ code }}" type="text" class="form-control input-group-prepend" placeholder="input product code">
+            </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Наименование товара</span>
+                </div>
+                <input name="name" value="{{ name }}" type="text" class="form-control input-group-prepend" placeholder="input product nane">
+            </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Цена товара</span>
+                </div>
+                <input name="price" value="{{ price }}" type="number" class="form-control input-group-prepend" placeholder="input product price">
+            </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Себестоимость</span>
+                </div>
+                <input name="cost" value="{{ cost }}" type="number" class="form-control input-group-prepend" placeholder="input product cost">
+            </div>
+
+{#            #[ORM\ManyToOne(targetEntity: Category::class, cascade: ['persist', 'remove'])]#}
+{#            private ?Category $category = null;#}
+
+            <br>
+            <hr>
+            <b><legend class="col-form-label">Select state</legend></b>
+
+            <div class="input-group">
+                {% for key,value in states %}
+                    {% set checked = '' %}
+                    {% if (state == value) %}
+                        {% set checked = 'checked' %}
+                    {% endif %}
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                            <input {{ checked }} value={{ value }} class="form-check-input" type="radio" name="state" id={{ value }}>
+                            {{ key }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <hr>
+            <br>
+            <div class="btn-group mr-2 float-left">
+                <button type="submit" class="btn btn-primary btn-lg">{{ btn_submit }}</button>
+            </div>
+
+{#        {{ form_end(form) }}#}
+        </form>
+
     </section>
 
 {% endblock %}
+
