@@ -68,7 +68,7 @@ class CategoryService extends AbstractEntityService
     }
 
 
-    public function deleteCategoryById(int $category_id)
+    public function deleteCategoryById(int $category_id): void
     {
         try {
             $category = $this->getCategoryById($category_id);
@@ -109,6 +109,17 @@ class CategoryService extends AbstractEntityService
         return $arrTemp;
     }
 
+//    public function getIfPropertyExist(Category $category, string $property): mixed
+//    {
+//        $key = $category->getPropertyByName($property);
+//        $value = $category->getId();
+//        $categories[$key] = $value;
+//
+//        echo $key.'; '.$value;
+//
+//        return $categories[$key];
+//    }
+
 //    public function getArrPropertyFromCategory(string $property): array
 //    {
 //        $categories = $this->getAllCategory();
@@ -128,15 +139,4 @@ class CategoryService extends AbstractEntityService
 //
 //        return $arrProperty;
 //    }
-
-    public function getIfPropertyExist(Category $category, string $property): mixed
-    {
-        $key = $category->getPropertyByName($property);
-        $value = $category->getId();
-        $categories[$key] = $value;
-
-        echo $key.'; '.$value;
-
-        return $categories[$key];
-    }
 }

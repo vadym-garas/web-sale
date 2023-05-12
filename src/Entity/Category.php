@@ -16,8 +16,9 @@ use phpDocumentor\Reflection\Types\This;
 #[ORM\Table(name: 'categories')]
 class Category
 {
-    const AS_RADIO_BTN = 0;
-    const AS_DROP_LIST = 1;
+    const AS_INPUT = 0;
+    const AS_RADIO_BTN = 1;
+    const AS_DROP_LIST = 2;
     //const AS_CHECK_BOX = 2;
 
     const WITHOUT_CATEGORY = 0;
@@ -63,7 +64,14 @@ class Category
 
     public function getDisplay(): int
     {
-        return $this->display;
+        $display = $this->display;
+
+        //echo 'EMPTY: ' . empty($this->products);
+
+        if($this->products->isEmpty()) {
+            $display = self::AS_INPUT;
+        }
+        return $display;
     }
 
     public function setDisplay($display): self
@@ -81,8 +89,9 @@ class Category
     public static function getArrDisplayConstant(): array
     {
         return [
+            'AS_INPUT' => static::AS_INPUT,
             'AS_RADIO_BTN' => static::AS_RADIO_BTN,
-            'AS_DROP_LIST' => static::AS_RADIO_BTN
+            'AS_DROP_LIST' => static::AS_DROP_LIST
         ];
     }
 

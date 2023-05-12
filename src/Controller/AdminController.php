@@ -136,6 +136,7 @@ class AdminController extends AbstractController
         try {
 //            $categories = $this->categoryService->getArrPropertyFromCategory('name');
             //$categories = $this->categoryService->getAllCategory();
+
             $categories = $this->categoryService->getArrValueCategoryDetail();
             $product = $this->productService->getProductById($product_id);
 
@@ -170,7 +171,7 @@ class AdminController extends AbstractController
     {
         try {
 
-            echo 'Category current: ' . $currCategoryId = $request->request->get('categories');
+            'Category current: ' . $currCategoryId = $request->request->get('categories');
             $currCategory = $this->categoryService->getCategoryById($currCategoryId);
 
             $this->productService->updateProductById(function ($key) use ($request) {
@@ -437,25 +438,21 @@ class AdminController extends AbstractController
         ];
 
         try {
-            $categories = $this->categoryService->getAllCategory();
-
+            $categories = $this->categoryService->getArrValueCategoryDetail();//getAllCategory();
             $page = $this->pageService->getPageById($page_id);
-            $arrTemp = $page->getCategories();
-            $selected = [];
-//            echo 'test start ';
-            foreach ($arrTemp as $select) {
-                $selected[] = $select->getId();
-                // echo 'select: ' . $select->getId() . '; ';
-            }
-//            echo 'test end';
-            // echo '$category->getName(): '.$category->getName();
+//            $result = $page->getCategories();
+//            foreach($result as $option)
+//            {
+//                echo $option->getId();
+//            }
+            $selected = $this->pageService->getArrCategoryDetailById($page_id);
 
             $vars = $vars + [
                     'states' => State::getArrStateConstant(),
                     'state' => $page->getState(),
                     'name' => $page->getName(),
                     'categories' => $categories,
-                    'selected' => $selected,
+                    'selected' => array_keys($selected),
                     'form_action' =>$this->generateUrl('update_page', array('page_id'=>$page_id)),
                 ];
 
@@ -475,46 +472,34 @@ class AdminController extends AbstractController
     public function updatePageAction(Request $request, $page_id): Response
     {
         $result = $request->request->all();
-        //echo 'Selected: ' . $result('selected');
-        print_r($result);
-
-        $categories = $this->categoryService->getAllCategory();
-
-
-        foreach ($categories as $category) {
-            if(in_array($category->getId(), $result)) {
-
-            }
-        }
+        $formSelected = $result['choices']; //$request->request->get('selected');
 
         try {
+
+            $allCategories = $this->categoryService->getAllCategory();
             $currPage = $this->pageService->getPageById($page_id);
-            $categories = $currPage->getCategories();
+            $pageCategories = $this->pageService->getArrCategoryDetailById($page_id);
 
-            if (isset($result['choices'])){
+            foreach ($allCategories as $category)
+            {
+                $category_id = $category->getId();
 
-
-
-                foreach ($categories as $category) {
-
-                    if(!in_array($category->getId(), $result['choices'])) {
-
+                if(in_array($category_id, $formSelected))
+                {// если есть на форме
+                    if(!array_key_exists($category_id, $pageCategories)){
+                        // если нет на странице
+                        // echo 'Add to page ' . $category_id , '; ';
+                        $currPage->addCategory($category);
                     }
-
-                    $currCategory = $this->categoryService->getCategoryById((int)$select);
-                    $currPage->addCategory($currCategory);
+                } else {
+                    if(array_key_exists($category_id, $pageCategories)){
+                        $currPage->removeCategory($category);
+                    }
                 }
-            } else {
-
             }
 
-
-            $currPage
-                ->setName((string)$result['name'])
-                ->setState((int)$result['state']);
-
             $this->pageService->updatePage($currPage);
-
+//////////////////////////////////////////////////////////
             $response = $this->redirectToRoute('all_page');
         } catch (\Throwable $e) {
             $template = 'error.html.twig';

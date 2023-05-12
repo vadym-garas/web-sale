@@ -101,6 +101,20 @@ class PageService extends AbstractEntityService
 //        }
     }
 
+    public function getArrCategoryDetailById($page_id): array
+    {
+        $page = $this->getPageById($page_id);
+        $categories = $page->getCategories();
+        $result = [];
+
+        foreach ($categories as $category) {
+            $result[$category->getId()] = $category->getName();
+        }
+
+        return $result;
+    }
+
+
     public function getPageByUser(?User $user = null): array
     {
         try {

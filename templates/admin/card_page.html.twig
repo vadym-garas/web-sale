@@ -21,17 +21,17 @@
     <b><legend class="col-form-label">Выбрать категории для калькуляции</legend></b>
 
     <div class="input-group">
-        {% for category in categories %}
+        {% for category_id,category_name in categories %}
             {% set checked = '' %}
             {% for select in selected %}
-                {% if (category.getId==select) %}
+                {% if (category_id==select) %}
                     {% set checked = 'checked' %}
                 {% endif %}
             {% endfor %}
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input {{ checked }} type="checkbox" name="choices[]" value="{{ category.getId() }}" class="form-check-input">
-                    {{ category.getName() }}
+                    <input {{ checked }} type="checkbox" name="choices[]" value="{{ category_id }}" class="form-check-input">
+                    {{ category_name }}
                 </label>
             </div>
         {% endfor %}

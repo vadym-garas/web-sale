@@ -8,8 +8,12 @@ use App\Entity\State;
 use App\Form\CardCheckboxType;
 use App\Services\PageService;
 use App\Services\ProductService;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,18 +37,64 @@ class ApiController extends AbstractController
         ]);
     }
 
-    #[Route('/checkbox', name: 'checkbox_group', methods: ['get', 'post'])]
-    public function readCheckboxAction(Request $request): Response
+//    #[Route('/checkbox', name: 'checkbox_group', methods: ['get', 'post'])]
+//    public function readCheckboxAction(Request $request): Response
+//    {
+//        $categories = ['Category 1', 'Category 2', 'Category 3'];
+//
+//        $form = $this->createFormBuilder()
+//            ->add('categories', ChoiceType::class, [
+//                'choices' => array_combine($categories, $categories),
+//                'multiple' => true,
+//            ])
+//            ->add('submit', SubmitType::class, ['label' => 'Submit'])
+//            ->getForm();
+//
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $data = $form->getData();
+//            $selectedCategories = $data['categories'];
+//            // Handle selected categories
+//            print_r($selectedCategories);
+//        }
+//
+//        return $this->render('admin/card_checkbox.html.twig', [
+//            'form' => $form->createView(),
+//        ]);
+//    }
+
+
+    #[Route('/page', name: 'new_page', methods: ['get', 'post'])]
+    public function addNewPageAction(Request $request): Response
     {
-        $categories = ['Category 1', 'Category 2', 'Category 3'];
+        $categories = $this->categoryService->getArrValueCategoryDetail();
 
         $form = $this->createFormBuilder()
-            ->add('categories', ChoiceType::class, [
-                'choices' => array_combine($categories, $categories),
-                'multiple' => true,
+            ->add('name', TextType::class, [
+                'label' => 'Название страницы калькулятора',
             ])
-            ->add('submit', SubmitType::class, ['label' => 'Submit'])
+            ->add('categories', ChoiceType::class, [
+                'choices' => array_flip($categories),//array_combine($key, $value),// $categories),
+
+                'expanded' => true,
+                'multiple' => true,
+                'label' => 'Выбрать категории для калькуляции',
+            ])
+//            ->add('order_range', NumberType::class, [
+//                'label' => 'Порядок отображения страниц',
+//            ])
+            ->add('state', ChoiceType::class, [
+                'choices' => State::getArrStateConstant(),
+                'required' => true,
+                'expanded' => true,
+                'label' => 'Статус страницы',
+            ])
+            ->add('submit', SubmitType::class, ['label' => 'Сохранить'])
             ->getForm();
+//
+//        'states' => State::getArrStateConstant(),
+//            'state' => State::STATE_DISABLE,
 
         $form->handleRequest($request);
 
@@ -59,6 +109,7 @@ class ApiController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
 //    #[Route('/product', name: 'add_product', methods: ['get', 'post'])]
 //    public function addProductAction(Request $request): Response

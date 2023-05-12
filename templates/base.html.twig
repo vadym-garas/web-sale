@@ -12,11 +12,19 @@
         {{ encore_entry_link_tags('app') }}
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <link rel="shortcut icon" href="{{ asset('ico/favicon.png') }}">
+
     {% endblock %}
 
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
+{#    <script#}
+{#            src="https://code.jquery.com/jquery-3.6.4.min.js"#}
+{#            integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="#}
+{#            crossorigin="anonymous">#}
+
+{#    </script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 
 <body>
@@ -38,5 +46,209 @@
 {#    {% block content %}{% endblock %}#}
 
 {% endblock %}
+{#<script>#}
+{#    $( "select" ).click( "select", function() {#}
+{#        var value = $(this).children('option:selected').data('price')#}
+{#        //alert("The data-id of clicked item is: " + value);#}
+{#        $(":input#name_price").val( JSON.stringify(value) );#}
+{#    } ).trigger( "change" );#}
+{#</script>#}
+
+
+<script>
+
+    const select = document.getElementsByTagName("select");
+    const price = document.getElementById("name_price");
+    const name = document.getElementById("name_name");
+    // const input = document.querySelector("input");
+    // const input = document.getElementById("name_name");
+
+    select[0].addEventListener("change", function(){
+
+        // this.getAttribute('data-price');
+        // input.value = this.value;
+        //price.value = this.options[this.selectedIndex].getAttribute("data-price");
+        // price.setAttribute('data-price', price.value);
+        // name.value = this.options[this.selectedIndex].value;
+        // input.value = this.options[this.selectedIndex].text;
+        // input.unit = this.options[this.selectedIndex].getAttribute("data-unit");
+        // price.setAttribute('data-unit', input.unit);
+
+        name.value = this.options[this.selectedIndex].getAttribute("data-name");
+        price.value = this.options[this.selectedIndex].value;
+    });
+</script>
+
+
+<script>
+
+        const heightInputElement = document.getElementById('main_height');
+        const widthInputElement = document.getElementById('main_width');
+        const totalPriceElement = document.getElementById('total-price');
+        const discountPersentElement = document.getElementById('discount-p');
+        const discountValueElement = document.getElementById('discount-v');
+        const withDiscountElement = document.getElementById('with-discount');
+        const totalAmountElement = document.getElementById('amount');
+        const valueResultElement = document.getElementById('value-result');
+
+        const radioButtons = document.querySelectorAll('input[type="radio"][value]');
+        const inputButtons = document.querySelectorAll('input.price_calc[type="number"][value]');
+
+        // get all the radio buttons with data-price attribute
+        // const radioButtons = document.querySelectorAll('input[type="radio"][data-price]');
+        // const inputButtons = document.querySelectorAll('input[type="number"][data-price]');
+
+        // add an event listener to each radio button
+        // radioButtons.forEach(button => {
+        //     button.addEventListener('change', () => {
+        //         // get the selected radio button
+        //         const selectedButton = document.querySelector('input[type="radio"][data-price]:checked');
+        //
+        //         // get the price and unit of the selected product
+        //         const price = selectedButton.dataset.price;
+        //         const unit = selectedButton.dataset.unit;
+        //
+        //         // update the total price element
+        //         // const totalPriceElement = document.getElementById('total-price');
+        //         // totalPriceElement.innerText = `${price} ${unit}`;
+        //     });
+        // });
+
+        // calculate the initial total price
+        // let totalPrice = 0;
+        // radioButtons.forEach(button => {
+        //     if (button.checked) {
+        //         totalPrice += parseInt(button.dataset.price);
+        //     }
+        // });
+
+        // const totalPriceElement = document.getElementById('total-price');
+
+        totalPriceElement.innerText = '0.00';//`${totalPrice} ${radioButtons[0].dataset.unit}`;
+        // discountPersentElement.value = '0';
+
+        // add an event listener to the form submit button
+        const submitButton = document.getElementById('submit-button');
+        submitButton.addEventListener('click', () => {
+            // get all the checked radio buttons and sum their prices
+            // alert(JSON.stringify(radioButtons));
+
+            let totalPrice = 0;
+            const height = heightInputElement.value;
+            const width = widthInputElement.value;
+
+            let perimeter = 2 * (height/100 + width/100)/100;
+            let area = (height/100 * width/100)/100;
+
+            if (area > 0) {
+
+                radioButtons.forEach(button => {
+                    if (button.checked) {
+                        totalPrice = calculation(button, perimeter, area, totalPrice);
+                        console.log('radio calculation');
+                    }
+                });
+
+                inputButtons.forEach(button => {
+                    totalPrice = calculation(button, perimeter, area, totalPrice);
+                    console.log('input calculation');
+                })
+
+                // display the total price
+                totalPriceElement.innerText = `${totalPrice.toFixed(2)}`;
+
+                let discountPersent = discountPersentElement.value < 0 ? totalPrice : discountPersentElement.value;
+                console.log('discountPersent:', discountPersent);
+
+                let withDiscount = totalPrice - (totalPrice/100*discountPersent) - discountValueElement.value;
+
+                let valueResult = withDiscount * totalAmountElement.value;
+
+                withDiscountElement.innerText = `${withDiscount.toFixed(2)}`;
+                valueResultElement.innerText = `${valueResult.toFixed(2)}`;
+
+                // const totalAmountElement = document.getElementById('amount');
+                // const totalResultElement = document.getElementById('total-price');
+
+            } else {
+                alert('Не введен размер изделия!\nЗаполните поля Ширина и Высота');
+            }
+            console.log('height:',height, 'width:', width, 'perimeter:', perimeter, 'area:', area);
+        });
+
+        calculation = function (button, perimeter, area, totalPrice){
+            let unit = parseInt(button.dataset.unit);
+            let price = parseInt(button.value);
+            let name =  JSON.stringify(button.dataset.name);
+
+            if (Number.isInteger(price)) {
+                if (unit === 1) {
+                    totalPrice += price * perimeter;
+                } else if (unit === 2) {
+                    totalPrice += price * area;
+                }
+                console.log(name, price);
+            } else {
+                alert('Не установлена стоимость комплектующей в группе' + name);
+            }
+            return totalPrice;
+        }
+
+</script>
+
+{#<script>#}
+
+{#    var select = document.getElementsByTagName("select");#}
+{#    var s = document.getElementById("name_price");#}
+{#    var input = document.querySelector("input");#}
+
+{#    select[0].addEventListener("change", function(){#}
+
+{#        this.getAttribute('data-price')#}
+{#        // input.value = this.value;#}
+{#        input.value = this.options[this.selectedIndex].text;#}
+{#        s.value = this.options[this.selectedIndex].getAttribute("data-price");#}
+{#    });#}
+{#</script>#}
+
+{#<script>#}
+
+{#    const HEIGHT = document.getElementById("main_height");#}
+{#    const WIDTH = document.getElementById("main_width");#}
+{#    const AREA = HEIGHT*WIDTH;#}
+{#    const PERIMETER = 2*(HEIGHT+WIDTH);#}
+
+{#    var calcResult;#}
+
+{#    // selected = document.getElementsByTagName("select");#}
+{#    // selected = document.getElementsByTagName("input");#}
+{#    var selected = document.getElementsByClassName("form-check-input");#}
+
+{#    var calculate = document.getElementById("main_calculate");#}
+
+{#    calculate.onclick = function () {#}
+
+
+{#        [...selected].forEach(function () {#}
+{#            var price = this.options[this.selectedIndex].getAttribute("data-price");#}
+{#            var unit = this.options[this.selectedIndex].getAttribute("data-unit");#}
+
+{#            console.log(price, unit);#}
+
+{#            if (unit===1) {#}
+{#                calcResult += PERIMETER * price;#}
+{#            } else if (unit===2) {#}
+{#                calcResult += AREA * price;#}
+{#            }#}
+{#        });#}
+
+{#        var main_price = document.getElementById("main_price");#}
+{#        //alert(price);#}
+
+{#        main_price.innerHTML = calcResult;#}
+{#    };#}
+
+{#</script>#}
+
 </body>
 </html>

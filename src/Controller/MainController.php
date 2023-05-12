@@ -7,6 +7,7 @@ use App\Entity\State;
 use App\FrameCalculator\Interfaces\ICalculateFrame;
 use App\Services\AbstractEntityService;
 use App\Services\CategoryService;
+use App\Services\PageService;
 use App\Services\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,7 @@ class MainController extends AbstractController
     public function __construct(
         protected ProductService $productService,
         protected CategoryService $categoryService,
+        protected PageService $pageService
         // protected ICalculateFrame $calculator,
     ){}
 
@@ -79,6 +81,54 @@ class MainController extends AbstractController
             'form_action' => $this->container->get('router')->getRouteCollection()->get('calculate_order')->getPath(),
             'calculate_price' => $calculate_price
         ]);
+    }
+
+    #[Route('/calculator/{page_id}', name: 'page_selector', requirements: ['page_id'=>'[0-9]{1,5}'], methods: ['get'])]
+    public function pageSelectorAction(Request $request, $page_id=0): Response
+    {
+        $vars = [
+            'form_title' => 'Расчет стоимости',
+            'btn_submit' => 'рассчитать заказ',
+        ];
+
+        try {
+            $pages = $this->pageService->getAllPage();
+            $page = $this->pageService->getPageById($page_id);
+            $categories = $page->getCategories();
+
+            $vars = $vars + [
+                    'categories' => $categories,
+                    'pages' => $pages,
+                    'state' => $page->getId(),
+                ];
+
+            $template = 'pages/main.html.twig';
+        } catch (\Throwable $e) {
+            $response = new Response($e->getMessage(), 400);
+            $vars = $vars + [
+                    'error' => $response
+                ];
+            $template = 'error.html.twig';
+        }
+        return $this->render($template, $vars + [
+                //'form_action' => $this->generateUrl('calculate')
+            ]);
+    }
+
+    #[Route('/calculator/post/', name: 'calculate',methods: ['post'])]
+    public function calculateAction(Request $request): Response
+    {
+        try {
+            //print_r($request->request->all());
+
+            $response = $this->redirectToRoute('all_page');
+        } catch (\Throwable $e) {
+            $template = 'error.html.twig';
+            $response = $this->render($template, [
+                'error' => new Response($e->getMessage(), 400)
+            ]);
+        }
+        return $response;
     }
 
 

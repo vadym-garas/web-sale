@@ -1,12 +1,37 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
 {% block title %} Hello World Page {% endblock %}
 
 {% block content %}
 
     {{ form_start(form) }}
 
+    <b><legend class="col-form-label">Выбрать категории для калькуляции</legend></b>
+
+    <br>
+    <hr>
+    <div class="form-group input-group">
+        {{ form_row(form.name) }}
+    </div>
+    <div class="form-group input-group">
+        {{ form_row(form.categories) }}
+    </div>
+{#    <div class="form-group input-group">#}
+{#        {{ form_row(form.order_range) }}#}
+{#    </div>#}
+
+    {%- block radio_widget -%}
+{#        <input type="radio" name="{{ full_name }}" id="radio_{{ value }}" value="{{ value }}"{% if checked %} checked="checked"{% endif %} />#}
+        {{ form_row(form.state) }}
+    {%- endblock radio_widget -%}
+
+
     {{ form_end(form) }}
+
+
+
 
 {% endblock %}
 

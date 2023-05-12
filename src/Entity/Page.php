@@ -26,8 +26,6 @@ class Page
     use RangeTrait;
     use StateTrait;
 
-    private array $arrPrevCategoryState = [];
-
     public function __construct()
     {
         $this->categories = new ArrayCollection();
