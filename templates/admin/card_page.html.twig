@@ -13,25 +13,42 @@
         <div class="input-group-prepend">
             <span class="input-group-text">Название страницы</span>
         </div>
-        <input name="name" value="{{ name }}" type="text" class="form-control input-group-prepend" placeholder="input page name">
+        <input name="name" value="{{ page.name }}" type="text" class="form-control input-group-prepend" placeholder="input page name">
     </div>
 
     <br>
     <hr>
-    <b><legend class="col-form-label">Выбрать категории для калькуляции</legend></b>
+    <b><legend class="col-form-label">Категории для калькуляции</legend></b>
+
+{#    <section>#}
+{#        <a href="" class="btn btn btn-outline-primary">+ Добавить</a>#}
+{#        {% for key,value in selected %}#}
+{#        <a href="./{{page.id}}/category/{{key}}/delete" class="btn btn-outline-danger" value="{{ key }}">{{ value }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">#}
+{#                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>#}
+{#            </svg></a>#}
+{#        {% endfor %}#}
+{#    </section>#}
 
     <div class="input-group">
-        {% for category_id,category_name in categories %}
+        <div class="form-check form-check-inline">
+{#            <label class="form-check-label">#}
+{#                <input checked data-price="0" data-unit="0" value="0"#}
+{#                       name=name="choices[]"#}
+{#                       class="form-check-input" type="checkbox">#}
+{#                нет#}
+{#            </label>#}
+        </div>
+        {% for category in categories %}
             {% set checked = '' %}
             {% for select in selected %}
-                {% if (category_id==select) %}
+                {% if (category.id==select) %}
                     {% set checked = 'checked' %}
                 {% endif %}
             {% endfor %}
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input {{ checked }} type="checkbox" name="choices[]" value="{{ category_id }}" class="form-check-input">
-                    {{ category_name }}
+                    <input {{ checked }} type="checkbox" name="choices[]" value="{{ category.id }}" class="form-check-input">
+                    {{ category.name }}
                 </label>
             </div>
         {% endfor %}
@@ -58,7 +75,7 @@
     <div class="input-group">
         {% for key,value in states %}
             {% set checked = '' %}
-            {% if (state == value) %}
+            {% if (page.state == value) %}
                 {% set checked = 'checked' %}
             {% endif %}
             <div class="form-check form-check-inline">

@@ -131,37 +131,43 @@ class MainController extends AbstractController
         return $response;
     }
 
-
     #[Route('/', methods: ['GET'])]
     public function mainAction(): Response
     {
-
-        $vars = [
-            'form_title' => 'Baguette Category Constructor',
-            'btn_submit' => '+ Add new Product',
-        ];
-
-        try {
-            $categories = $this->categoryService->getAllCategory();
-
-            $vars = $vars + [
-                    'state'=>array_flip(State::getArrStateConstant()),
-                    'categories'=>$categories,
-                ];
-
-
-            $template = 'pages/main.html.twig';
-
-        } catch (\Throwable $e) {
-            $response = new Response($e->getMessage(), 400);
-            $vars = $vars + [
-                    'error' => $response
-                ];
-            $template = 'error.html.twig';
-        }
-
-        return $this->render($template, $vars+ [
-
-            ]);
+        return new Response('<html><body><h1>Main Page</h1></body></html>');
     }
+
+
+//    #[Route('/', methods: ['GET'])]
+//    public function mainAction(): Response
+//    {
+//
+//        $vars = [
+//            'form_title' => 'Baguette Category Constructor',
+//            'btn_submit' => '+ Add new Product',
+//        ];
+//
+//        try {
+//            $categories = $this->categoryService->getAllCategory();
+//
+//            $vars = $vars + [
+//                    'state'=>array_flip(State::getArrStateConstant()),
+//                    'categories'=>$categories,
+//                ];
+//
+//
+//            $template = 'pages/main.html.twig';
+//
+//        } catch (\Throwable $e) {
+//            $response = new Response($e->getMessage(), 400);
+//            $vars = $vars + [
+//                    'error' => $response
+//                ];
+//            $template = 'error.html.twig';
+//        }
+//
+//        return $this->render($template, $vars+ [
+//
+//            ]);
+//    }
 }

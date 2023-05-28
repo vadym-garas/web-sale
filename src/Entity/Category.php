@@ -81,10 +81,10 @@ class Category
         return $this;
     }
 
-    public static function getClassVars(): array
-    {
-        return get_class_vars(__CLASS__);
-    }
+//    public static function getClassVars(): array
+//    {
+//        return get_class_vars(__CLASS__);
+//    }
 
     public static function getArrDisplayConstant(): array
     {

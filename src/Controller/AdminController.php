@@ -8,6 +8,7 @@ use App\Entity\Unit;
 use App\Services\ProductService;
 use App\Services\CategoryService;
 use App\Services\PageService;
+use phpDocumentor\Reflection\Types\Object_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,36 +71,27 @@ class AdminController extends AbstractController
     #[Route('/product', name: 'add_product', methods: ['get'])]
     public function addProductAction(Request $request): Response
     {
-        $vars = [
-            'form_title' => 'Добавить новый товар',
-            'btn_submit'=> 'Сохранить',
-        ];
-
+        $vars = [];
         try {
-            // $categories = $this->categoryService->getAllCategory();
-            $categories = $this->categoryService->getArrValueCategoryDetail();
-
             $vars = $vars + [
+                    'form_title' => 'Добавить новый товар',
+                    'btn_submit'=> 'Сохранить',
                     'states' => State::getArrStateConstant(),
                     'state' => State::STATE_DISABLE,
                     'code' => null,
                     'name' => null,
                     'price' => null,
                     'cost' => null,
-                    'categories' => $categories,
+                    'categories' => $this->categoryService->getArrValueCategoryDetail(),
                     'select' => Category::WITHOUT_CATEGORY,
                 ];
-
             $template = 'admin/card_product.html.twig';
 
         } catch (\Throwable $e) {
             $response = new Response($e->getMessage(), 400);
-            $vars = $vars + [
-                    'error' => $response
-                ];
+            $vars = $vars + ['error' => $response];
             $template = 'error.html.twig';
         }
-
         return $this->render($template, $vars + [
                 'form_action' => $this->generateUrl('create_product'),
             ]);
@@ -108,13 +100,12 @@ class AdminController extends AbstractController
     #[Route('/product/create', name: 'create_product', methods: ['post'])]
     public function createProductAction(Request $request): Response
     {
-//        print_r($request->request->all());
         try {
             $this->productService->createProduct(function ($key) use ($request) {
                 return $request->request->get($key);
             });
-
             $response = $this->redirectToRoute('all_product');
+
         } catch (\Throwable $e) {
             $template = 'error.html.twig';
             $response = $this->render($template, [
@@ -128,38 +119,28 @@ class AdminController extends AbstractController
     #[Route('/product/{product_id}', name: 'read_product', requirements: ['product_id' => '[0-9]{1,5}'], methods: ['get'])]
     public function readProductAction($product_id=0): Response
     {
-        $vars = [
-            'form_title' => 'Отредактировать существующий товар',
-            'btn_submit'=> 'Сохранить изменения',
-        ];
-
+        $vars = [];
         try {
-//            $categories = $this->categoryService->getArrPropertyFromCategory('name');
-            //$categories = $this->categoryService->getAllCategory();
-
-            $categories = $this->categoryService->getArrValueCategoryDetail();
             $product = $this->productService->getProductById($product_id);
-
             $vars = $vars + [
+                    'form_title' => 'Отредактировать существующий товар',
+                    'btn_submit'=> 'Сохранить изменения',
                     'states' => State::getArrStateConstant(),
                     'state' => $product->getState(),
                     'code' => $product->getCode(),
                     'name' => $product->getName(),
                     'price' => $product->getPrice(),
                     'cost' => $product->getCost(),
-                    'categories' => $categories,
+                    'categories' => $this->categoryService->getArrValueCategoryDetail(),
                     'select' => $product->getCategory()->getId(),
                 ];
-
             $template = 'admin/card_product.html.twig';
+
         } catch (\Throwable $e) {
             $response = new Response($e->getMessage(), 400);
-            $vars = $vars + [
-                    'error' => $response
-                ];
+            $vars = $vars + ['error' => $response];
             $template = 'error.html.twig';
         }
-
         return $this->render($template, $vars + [
                 'form_action' =>$this->generateUrl('update_product', array('product_id'=>$product_id))
             ]);
@@ -170,8 +151,7 @@ class AdminController extends AbstractController
     public function updateProductAction(Request $request, $product_id): Response
     {
         try {
-
-            'Category current: ' . $currCategoryId = $request->request->get('categories');
+            echo 'Category current: ' . $currCategoryId = $request->request->get('categories');
             $currCategory = $this->categoryService->getCategoryById($currCategoryId);
 
             $this->productService->updateProductById(function ($key) use ($request) {
@@ -280,23 +260,20 @@ class AdminController extends AbstractController
     #[Route('/category/{category_id}', name: 'read_category', requirements: ['category_id' => '[0-9]{1,5}'], methods: ['get'])]
     public function readCategoryAction($category_id=0): Response
     {
-        $vars = [
-            'form_title' => 'Обновит существующую категорию',
-            'btn_submit' => 'Сохранить изменения',
-        ];
-
+        $vars = [];
         try {
             $category = $this->categoryService->getCategoryById($category_id);
-
             $vars = $vars + [
+                    'form_title' => 'Обновит существующую категорию',
+                    'btn_submit' => 'Сохранить изменения',
                     'states' => State::getArrStateConstant(),
-                    'state' => $category->getState(),
-                    'name' => $category->getName(),
                     'units' => Unit::getArrUnitConstant(),
                     'unit' => $category->getUnit(),
+                    'state' => $category->getState(),
+                    'name' => $category->getName(),
             ];
-
             $template = 'admin/card_category.html.twig';
+
         } catch (\Throwable $e) {
             $response = new Response($e->getMessage(), 400);
             $vars = $vars + [
@@ -314,12 +291,11 @@ class AdminController extends AbstractController
     public function updateCategoryAction(Request $request, $category_id): Response
     {
         try {
-////////////////////////////////////////////////////////////////
             $this->categoryService->updateCategoryById($category_id, function ($key) use ($request) {
                 return $request->request->get($key);
             });
-
             $response = $this->redirectToRoute('all_category');
+
         } catch (\Throwable $e) {
             $template = 'error.html.twig';
             $response = $this->render($template, [
@@ -335,7 +311,7 @@ class AdminController extends AbstractController
         try {
             $this->categoryService->deleteCategoryById($category_id);
 
-            $response = $this->redirectToRoute('all_product');
+            $response = $this->redirectToRoute('all_category');
         } catch (\Throwable $e) {
             $template = 'error.html.twig';
             $response = $this->render($template, [
@@ -354,14 +330,11 @@ class AdminController extends AbstractController
         ];
 
         try {
-            $pages = $this->pageService->getAllPage();
-
             $vars = $vars + [
                     'states'=>array_flip(State::getArrStateConstant()),
-                    'pages'=>$pages,
+                    'pages'=>$this->pageService->getAllPage(),
                     'update_url'=>$this->generateUrl('read_page'),
                 ];
-
             $template = 'admin/list_page.html.twig';
 
         } catch (\Throwable $e) {
@@ -371,7 +344,6 @@ class AdminController extends AbstractController
                 ];
             $template = 'error.html.twig';
         }
-
         return $this->render($template, $vars + [
                 'form_action' => $this->generateUrl('add_page')
             ]);
@@ -381,23 +353,21 @@ class AdminController extends AbstractController
     #[Route('/page', name: 'add_page', methods: ['get'])]
     public function addPageAction(Request $request): Response
     {
-        $vars = [
-            'form _title' => 'Создать новую страницу',
-            'btn_submit' => 'Сохранить',
-            'states' => State::getArrStateConstant(),
-            'state' => State::STATE_DISABLE,
-            'name' => '',
-            'selected' => [],
-        ];
-
+        $vars = [];
         try {
-            $categories = $this->categoryService->getAllCategory();
             $vars = $vars + [
-                    'categories' => $categories,
-                    //'select' => $product->getCategory()->getId(),
+                    'form _title' => 'Создать новую страницу',
+                    'categories' => $this->categoryService->getAllCategory(),
+                    'btn_submit' => 'Сохранить',
+                    'states' => State::getArrStateConstant(),
+                    'page' => (object) [
+                        'name' => '',
+                        'state' => State::STATE_DISABLE,
+                    ],
+                    'selected' => [],
                 ];
-
             $template = 'admin/card_page.html.twig';
+
         } catch (\Throwable $e) {
             $response = new Response($e->getMessage(), 400);
             $vars = $vars + [
@@ -405,7 +375,6 @@ class AdminController extends AbstractController
                 ];
             $template = 'error.html.twig';
         }
-
         return $this->render($template, $vars + [
                 'form_action' => $this->generateUrl('create_page')
             ]);
@@ -415,11 +384,14 @@ class AdminController extends AbstractController
     public function createPageAction(Request $request): Response
     {
         try {
-            $this->pageService->createPage(function ($key) use ($request) {
-                return $request->request->get($key);
-            });
+            $categories = $this->categoryService->getAllCategory();
 
+            $this->pageService->createPage($categories, function ($key) use ($request) {
+                $result = $request->request->all();
+                return $result["$key"];
+            });
             $response = $this->redirectToRoute('all_page');
+
         } catch (\Throwable $e) {
             $template = 'error.html.twig';
             $response = $this->render($template, [
@@ -429,34 +401,36 @@ class AdminController extends AbstractController
         return $response;
     }
 
+    #[Route('/page/{page_id}/category/{category_id}/delete', name: 'del_page_category', methods: ['get'])]
+    public function deleteCategoryInPage($page_id, $category_id): Response
+    {
+        $currPage = $this->pageService->getPageById($page_id);
+        $category = $this->categoryService->getCategoryById($category_id);
+
+        $currPage->removeCategory($category);
+        $this->pageService->updatePage($currPage);
+
+        return $this->redirectToRoute('read_page', ["page_id"=>$page_id]);
+    }
+
     #[Route('/page/{page_id}', name: 'read_page', requirements: ['page_id' => '[0-9]{1,5}'], methods: ['get'])]
     public function readPageAction($page_id=0): Response
     {
-        $vars = [
-            'form_title' => 'Обновит существующую страницу',
-            'btn_submit' => 'Сохранить изменения',
-        ];
-
+        $vars = [];
         try {
-            $categories = $this->categoryService->getArrValueCategoryDetail();//getAllCategory();
-            $page = $this->pageService->getPageById($page_id);
-//            $result = $page->getCategories();
-//            foreach($result as $option)
-//            {
-//                echo $option->getId();
-//            }
-            $selected = $this->pageService->getArrCategoryDetailById($page_id);
+            $selected = $this->pageService->getArrCategoryByPageId($page_id);
 
             $vars = $vars + [
+                    'form_title' => 'Обновит существующую страницу',
+                    'btn_submit' => 'Сохранить изменения',
                     'states' => State::getArrStateConstant(),
-                    'state' => $page->getState(),
-                    'name' => $page->getName(),
-                    'categories' => $categories,
-                    'selected' => array_keys($selected),
+                    'page' => $this->pageService->getPageById($page_id),
+                    'categories' => $this->categoryService->getAllCategory(),
+                    'selected' => array_keys($this->pageService->getArrCategoryByPageId($page_id)),
                     'form_action' =>$this->generateUrl('update_page', array('page_id'=>$page_id)),
                 ];
-
             $template = 'admin/card_page.html.twig';
+
         } catch (\Throwable $e) {
             $response = new Response($e->getMessage(), 400);
             $vars = $vars + [
@@ -464,43 +438,22 @@ class AdminController extends AbstractController
                 ];
             $template = 'error.html.twig';
         }
-
         return $this->render($template, $vars);
     }
 
     #[Route('/page/{page_id}/update', name: 'update_page', requirements: ['page_id' => '[0-9]{1,5}'], methods: ['post'])]
     public function updatePageAction(Request $request, $page_id): Response
     {
-        $result = $request->request->all();
-        $formSelected = $result['choices']; //$request->request->get('selected');
-
         try {
+            $categories = $this->categoryService->getAllCategory();
 
-            $allCategories = $this->categoryService->getAllCategory();
-            $currPage = $this->pageService->getPageById($page_id);
-            $pageCategories = $this->pageService->getArrCategoryDetailById($page_id);
+            $this->pageService->updatePageById($categories, function ($key) use ($request) {
+                $result = $request->request->all();
+                return $result["$key"];
+            }, $page_id);
 
-            foreach ($allCategories as $category)
-            {
-                $category_id = $category->getId();
-
-                if(in_array($category_id, $formSelected))
-                {// если есть на форме
-                    if(!array_key_exists($category_id, $pageCategories)){
-                        // если нет на странице
-                        // echo 'Add to page ' . $category_id , '; ';
-                        $currPage->addCategory($category);
-                    }
-                } else {
-                    if(array_key_exists($category_id, $pageCategories)){
-                        $currPage->removeCategory($category);
-                    }
-                }
-            }
-
-            $this->pageService->updatePage($currPage);
-//////////////////////////////////////////////////////////
             $response = $this->redirectToRoute('all_page');
+
         } catch (\Throwable $e) {
             $template = 'error.html.twig';
             $response = $this->render($template, [
@@ -514,7 +467,7 @@ class AdminController extends AbstractController
     public function deletePageAction($page_id): Response
     {
         try {
-            $this->categoryService->deleteCategoryById($page_id);
+            $this->pageService->deletePageById($page_id);
 
             $response = $this->redirectToRoute('all_page');
         } catch (\Throwable $e) {

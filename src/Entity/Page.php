@@ -31,6 +31,11 @@ class Page
         $this->categories = new ArrayCollection();
     }
 
+    public function getClassVarsName(): array
+    {
+        return array_keys(get_object_vars($this));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,8 +60,20 @@ class Page
 
     public function removeCategory(Category $category): self
     {
-        $this->categories->removeElement($category);
-
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+            echo 'Remove category '.$category->getName();
+            echo 'Remove category '.$category->getId();
+        }
         return $this;
     }
+
+//    public function removeCategories(array $categories): self
+//    {
+//        foreach ($this->categories as $category)
+//        {
+//            $this->removeCategory($category);
+//        }
+//        return $this;
+//    }
 }

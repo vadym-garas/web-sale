@@ -30,16 +30,10 @@ class CategoryService extends AbstractEntityService
     {
 //        try {
             $category = new Category();
-
-//            $category
-//                ->setName((string)$getParam('name'))
-//                ->setState((int)$getParam('state'))
-            ;
-
-//            $phoneObject = new Phone($user, $phone);
-//            $this->em->persist($phoneObject);
-//            $this->em->flush();
-
+            $category
+                ->setName((string)$getParam('name'))
+                ->setState((int)$getParam('state'))
+                ->setUnit((int)$getParam('unit'));
             $this->save($category);
 
             return $category;
@@ -67,25 +61,34 @@ class CategoryService extends AbstractEntityService
         }
     }
 
+    public function getArrValueCategoryDetail(): array
+    {
+        $categories = $this->getAllCategory();
+        $arrTemp = [];
+
+        foreach ($categories as $category) {
+            $arrTemp[$category->getId()] = $category->getName();
+        }
+        return $arrTemp;
+    }
 
     public function deleteCategoryById(int $category_id): void
     {
-        try {
+//        try {
             $category = $this->getCategoryById($category_id);
             $this->delete($category);
-
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
-        }
+//        } catch (\Throwable) {
+//            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
+//        }
     }
 
     public function getCategoryById(int $id): Category
     {
-        try {
+//        try {
             return $this->repository->findOneBy(['id' => $id]);
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $id);
-        }
+//        } catch (\Throwable) {
+//            throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $id);
+//        }
     }
 
     public function getAllCategory(): array
@@ -98,45 +101,4 @@ class CategoryService extends AbstractEntityService
         }
     }
 
-    public function getArrValueCategoryDetail(): array
-    {
-        $categories = $this->getAllCategory();
-        $arrTemp = [];
-
-        foreach ($categories as $category) {
-            $arrTemp[$category->getId()] = $category->getName();
-        }
-        return $arrTemp;
-    }
-
-//    public function getIfPropertyExist(Category $category, string $property): mixed
-//    {
-//        $key = $category->getPropertyByName($property);
-//        $value = $category->getId();
-//        $categories[$key] = $value;
-//
-//        echo $key.'; '.$value;
-//
-//        return $categories[$key];
-//    }
-
-//    public function getArrPropertyFromCategory(string $property): array
-//    {
-//        $categories = $this->getAllCategory();
-//        $arrProperty = [];
-//
-//        $arrProperty['Товары без категории'] = Category::WITHOUT_CATEGORY;
-//
-//        foreach ($categories as $category) {
-//            if(property_exists($category, $property)) {
-//
-//                $key = $category->getValueByKey($property);
-//                $value = $category->getId();
-//                $arrProperty[$key] = $value;
-//            }
-//        }
-//        print_r($arrProperty);
-//
-//        return $arrProperty;
-//    }
 }

@@ -25,6 +25,18 @@
 
 {#    </script>#}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        :root { --custom-size: 1.5; }
+        input[type=checkbox], input[type=radio]
+        {
+            -ms-transform: scale(var(--custom-size)); /* IE */
+            -moz-transform: scale(var(--custom-size)); /* FF */
+            -webkit-transform: scale(var(--custom-size)); /* Safari and Chrome */
+            -o-transform: scale(var(--custom-size)); /* Opera */
+            margin-left: 1.5rem !important;
+            margin-right: .5rem !important;
+        }
+    </style>
 </head>
 
 <body>

@@ -37,7 +37,7 @@ class Product
     public function __construct(
         string $code='',
         int $price=0,
-        int $cost=0
+        int $cost=0,
     ) {
         $this->code = $code;
         $this->price = $price;

@@ -8,6 +8,8 @@ use App\Exceptions\DataNotFoundException;
 use App\Exceptions\ObjectCantSaveException;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ObjectRepository;
+//use phpDocumentor\Reflection\Types\Collection;
+use Doctrine\Common\Collections\Collection;
 
 
 class PageService extends AbstractEntityService
@@ -24,29 +26,53 @@ class PageService extends AbstractEntityService
         $this->repository = $this->doctrine->getRepository(Page::class);
     }
 
+    public function addNewCategoryToPage($page, $categories, $choices)
+    {
+        foreach ($categories as $category)
+        {
+            if(in_array($category->getId(), $choices))
+            {
+                $page->addCategory($category);
+            }
+        }
+    }// add selected items
+
+    public function removeCategoryFromPage($page, $choices)
+    {
+        $oldCategories = $page->getCategories();
+        foreach ($oldCategories as $category)
+        {
+            if(!in_array($category->getId(), $choices))
+            {
+                $page->removeCategory($category);
+            }
+        }
+    }// delete non selected items
+
     /**
      * @throws ObjectCantSaveException
      */
-    public function createPage(\Closure $getParam): Page
+    public function createPage(array $categories, \Closure $getParam): Page
     {
 //        try {
             $page = new Page();
+            $choices = $getParam('choices');
 
-            $page
-                ->setName((string)$getParam('name'))
-                ->setState((int)$getParam('state'));
+            $this->addNewCategoryToPage($page, $categories, $choices);
 
-            $this->save($page);
+            return $this->updatePage($page, $getParam);
 
-            return $page;
 //        } catch (\Exception $e) {
 //            throw new ObjectCantSaveException('Product not saved', previous: $e);
 //        }
     }
 
-    public function updatePage(Page $page): Page
+    public function updatePage(Page $page, \Closure $getParam): Page
     {
         try {
+            $page
+                ->setName((string)$getParam('name'))
+                ->setState((int)$getParam('state'));
             $this->save($page);
 
             return $page;
@@ -55,41 +81,36 @@ class PageService extends AbstractEntityService
         }
     }
 
-    public function updatePageById(int $page_id, \Closure $getParam): Page
+    public function updatePageById(array $categories, \Closure $getParam, int $page_id): Page
     {
-        try {
-            $page = $this->getPageById($page_id);
+        $page = $this->getPageById($page_id);
+        $choices = $getParam('choices');
 
-            $page
-                ->setName((string)$getParam['name'])
-                ->setState((int)$getParam['state']);
+        $this->removeCategoryFromPage($page, $choices);
+        $this->addNewCategoryToPage($page, $categories, $choices);
 
-            $this->save($page);
+        return $this->updatePage($page, $getParam);
+    }
 
-            return $page;
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
+    public function getArrCategoryByPageId($page_id): array
+    {
+        $categories = $this->getPageById($page_id)->getCategories();
+        $result = [];
+
+        foreach ($categories as $category) {
+            $result[$category->getId()] = $category->getName();
         }
+        return $result;
     }
 
     public function deletePageById(int $page_id): void
     {
-        try {
-            $page = $this->getPageById($page_id);
+        $page = $this->getPageById($page_id);
+//        try {
             $this->delete($page);
-
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
-        }
-    }
-
-    public function getPageByCode(string $code): Page
-    {
-        try {
-            return $this->repository->findOneBy(['code' => $code]);
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $code);
-        }
+//        } catch (\Throwable) {
+//            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
+//        }
     }
 
     public function getPageById(int $id): Page
@@ -101,20 +122,6 @@ class PageService extends AbstractEntityService
 //        }
     }
 
-    public function getArrCategoryDetailById($page_id): array
-    {
-        $page = $this->getPageById($page_id);
-        $categories = $page->getCategories();
-        $result = [];
-
-        foreach ($categories as $category) {
-            $result[$category->getId()] = $category->getName();
-        }
-
-        return $result;
-    }
-
-
     public function getPageByUser(?User $user = null): array
     {
         try {
@@ -125,15 +132,14 @@ class PageService extends AbstractEntityService
         }
     }
 
-//    public function getProductsByCategoryId($category_id): array
-//    {
-//        try {
-//            return $this->repository->findBy(['category_id' => '3']);//     (['category_id' => $category_id], ['id' => 'ASC']);
-//        } catch (\Throwable) {
-//            echo 'throw';
-//            throw new DataNotFoundException('Data not found by code');
-//        }
-//    }
+    public function getPageByCode(string $code): Page
+    {
+        try {
+            return $this->repository->findOneBy(['code' => $code]);
+        } catch (\Throwable) {
+            throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $code);
+        }
+    }
 
     public function getAllPage(): array
     {

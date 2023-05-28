@@ -33,6 +33,9 @@ class ProductService extends AbstractEntityService
     {
 //        try {
         $product = new Product();
+        $category_id = (string)$getParam('category');
+
+
 
         $product
             ->setCode((string)$getParam('code'))
@@ -41,6 +44,7 @@ class ProductService extends AbstractEntityService
             ->setCost((int)$getParam('cost'))
             ->setState((int)$getParam('state'))
             ->setOrderRange(0);
+            //->setCategory()
 
         $this->save($product);
 
@@ -76,13 +80,12 @@ class ProductService extends AbstractEntityService
 
     public function deleteProductById(int $product_id): void
     {
-        try {
+//        try {
             $product = $this->getProductById($product_id);
             $this->delete($product);
-
-        } catch (\Throwable) {
-            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
-        }
+//        } catch (\Throwable) {
+//            throw new DataNotFoundException('Product not found by code from ProductService editProductByCode');
+//        }
     }
 
     public function getProductById(int $id): Product

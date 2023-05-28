@@ -88,7 +88,7 @@
                                                data-name="{{ category.name }}" data-unit="{{ category.unit }}"
                                                name="btn_select_{{ category.id }}">
                                         <div class="input-group-append">
-                                            <span class="input-group-text"><b>%</b></span>
+                                            <span class="input-group-text"><b>₴</b></span>
                                         </div>
                                     </div>
                                 </div>
@@ -152,7 +152,7 @@
                                            class="col-sm-2 col-form-label">{{ category.getName() }}</label>
                                     <div class="col-sm-10">
                                         <div id="category_{{ category.getId() }}" class="btn-group" role="group">
-                                            <div class="form-check form-check-inline">
+                                            <div class="form-check form-check-inline" style="border-left: 1px solid grey; padding-left: 1rem;">
                                                 <label class="form-check-label">
                                                     <input checked data-price="0" data-unit="0" value="0"
                                                            name="btn_select_{{ category.getId() }}"
@@ -166,14 +166,14 @@
                                                 {# {% if (state == value) %} #}
                                                 {# {% set checked = 'checked' %} #}
                                                 {# {% endif %} #}
-                                                <div class="form-check form-check-inline">
+                                                <div class="form-check form-check-inline" style="border-left: 1px solid grey; padding-left: 1rem;">
                                                     <label class="form-check-label">
                                                         <input {{ checked }} data-unit="{{ category.getUnit }}"
                                                                              data-name="{{ category.getName }}"
                                                                              value="{{ product.price }}"
                                                                              name="btn_select_{{ category.getId() }}"
                                                                              class="form-check-input" type="radio">
-                                                        {{ product.getName() }} {{ product.price }}
+                                                        {{ product.getName() }} ₴ {{ product.price }}
                                                     </label>
                                                 </div>
                                                 {# <button type="button" data-price="{{ product.price }}" value="{{ product.getId }}" name="btn_select" class="btn btn-secondary">{{ product.getName() }}</button> #}
