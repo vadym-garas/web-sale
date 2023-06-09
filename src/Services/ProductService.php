@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+// use App\Entity\Category;
 use App\Entity\Category;
 use App\Entity\Product;
 
@@ -29,13 +30,11 @@ class ProductService extends AbstractEntityService
     /**
      * @throws ObjectCantSaveException
      */
-    public function createProduct(\Closure $getParam): Product
+    public function createProduct(\Closure $getParam, Category $category): Product
     {
 //        try {
-        $product = new Product();
+        $product = new Product($category);
         $category_id = (string)$getParam('category');
-
-
 
         $product
             ->setCode((string)$getParam('code'))
@@ -55,9 +54,10 @@ class ProductService extends AbstractEntityService
     }
 
 
-    public function updateProductById(\Closure $getParam, Category $currCategory, int $product_id=0): Product
+    public function updateProductById(\Closure $getParam, Category $category, int $product_id): Product
     {
         $product = $this->getProductById($product_id);
+
         $product
             ->setCode((string)$getParam('code'))
             ->setName((string)$getParam('name'))
@@ -65,7 +65,7 @@ class ProductService extends AbstractEntityService
             ->setCost((int)$getParam('cost'))
             ->setState((int)$getParam('state'))
             ->setOrderRange(0)
-            ->setCategory($currCategory);
+            ->setCategory($category);
 //
 //            echo 'product name ' . $product->getName();
 

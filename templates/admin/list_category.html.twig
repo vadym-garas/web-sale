@@ -6,6 +6,7 @@
     <div class="btn-group mr-2 float-right">
         <form name="form_action" action="{{ form_action }}" method="GET">
             <div class="btn-group mr-2 float-right">
+{#                <button type="submit" class="btn btn-outline-primary">Save</button>#}
                 <button type="submit" class="btn btn-primary">{{ btn_submit }}</button>
             </div>
         </form>
@@ -25,9 +26,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for category in categories %}
+                        {% for category in categories|sort((a, b) => a.range <=> b.range)%}
                             <tr>
-                                <td style="width: 75px;"><input style="width: inherit;" value="{{ category.getOrderRange }}"></td>
+                                <td style="width: 75px;"><input type="number" style="width: inherit;" class="form-control" value="{{ category.range }}" readonly></td>
                                 <td>{{ category.id }}</td>
                                 <td>{{ category.name }}</td>
                                 <td>

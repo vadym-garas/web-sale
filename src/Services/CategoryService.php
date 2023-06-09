@@ -29,11 +29,16 @@ class CategoryService extends AbstractEntityService
     public function createCategory(\Closure $getParam): Category
     {
 //        try {
-            $category = new Category();
-            $category
-                ->setName((string)$getParam('name'))
-                ->setState((int)$getParam('state'))
-                ->setUnit((int)$getParam('unit'));
+            $category = new Category(
+                (string)$getParam('name'),
+                (int)$getParam('state'),
+                (int)$getParam('unit'),
+                (int)$getParam('range')
+            );
+//            $category
+//                ->setName((string)$getParam('name'))
+//                ->setState((int)$getParam('state'))
+//                ->setUnit((int)$getParam('unit'));
             $this->save($category);
 
             return $category;
@@ -48,11 +53,13 @@ class CategoryService extends AbstractEntityService
         try {
             $category = $this->getCategoryById($category_id);
 
+//            echo 'form updateCategoryById = '.(int)$getParam('range');
+
             $category
                 ->setName((string)$getParam('name'))
                 ->setUnit((int)$getParam('unit'))
-                ->setState((int)$getParam('state'));
-
+                ->setState((int)$getParam('state'))
+                ->setRange((int)$getParam('range'));
             $this->save($category);
 
             return $category;
@@ -82,10 +89,28 @@ class CategoryService extends AbstractEntityService
 //        }
     }
 
-    public function getCategoryById(int $id): Category
+    public function getCategoryById(int $id=0): Category
     {
 //        try {
-            return $this->repository->findOneBy(['id' => $id]);
+            $result = $this->repository->findOneBy(['id' => $id]);
+            if(!isset($result)) {
+                $result = $this->getDefaultCategory();
+            }
+            return $result;
+//        } catch (\Throwable) {
+//            throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $id);
+//        }
+    }
+
+    public function getDefaultCategory(): Category
+    {
+//        try {
+            $result = $this->repository->findOneBy(['name' => Category::WITHOUT_CATEGORY]);
+            if(!isset($result)) {
+                $result = new Category();
+            }
+            return $result;
+
 //        } catch (\Throwable) {
 //            throw new DataNotFoundException('Product not found by code from ProductService getUrlByCode code = ' . $id);
 //        }

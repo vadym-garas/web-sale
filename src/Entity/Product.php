@@ -35,15 +35,16 @@ class Product
     use RangeTrait;
 
     public function __construct(
+        ?Category $category = null,
         string $code='',
         int $price=0,
-        int $cost=0,
+        int $cost=0
     ) {
         $this->code = $code;
         $this->price = $price;
         $this->cost = $cost;
 
-        $this->category = new Category();
+        isset($category) ? $this->category = $category : $this->category = new Category();
     }
 
     /**

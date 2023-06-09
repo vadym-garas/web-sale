@@ -25,9 +25,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for page in pages %}
+                        {% for page in pages|sort((a, b) => a.range <=> b.range) %}
                             <tr>
-                                <td style="width: 75px;"><input style="width: inherit;" value="{{ page.getOrderRange }}"></td>
+                                <td style="width: 75px;"><input type="number" style="width: inherit;" class="form-control" value="{{ page.range }}" readonly></td>
                                 <td>{{ page.id }}</td>
                                 <td>{{ page.name }}</td>
                                 <td>

@@ -21,7 +21,7 @@ class Category
     const AS_DROP_LIST = 2;
     //const AS_CHECK_BOX = 2;
 
-    const WITHOUT_CATEGORY = 0;
+    const WITHOUT_CATEGORY = 'WITHOUT_CATEGORY';
 
     #[ORM\Id]
     #[ORM\Column(type: Types::INTEGER)]
@@ -42,13 +42,18 @@ class Category
     use UnitTrait;
     use RangeTrait;
 
-    public function __construct($state=State::STATE_DISABLE)
-    {
-        $this->name = 'WITHOUT_CATEGORY';
+    public function __construct(
+        $name = self::WITHOUT_CATEGORY,
+        $state = State::STATE_DISABLE,
+        $unit = Unit::UNDEFINED,
+        $display = self::AS_RADIO_BTN,
+        $range=0
+    ) {
+        $this->name = $name;
         $this->state = $state;
-        $this->unit = Unit::UNDEFINED;
-        $this->display = self::AS_RADIO_BTN;
-        //$this->range = '';
+        $this->unit = $unit;
+        $this->display = $display;
+        $this->order_range = $range;
 
         $this->products = new ArrayCollection();
         $this->pages = new ArrayCollection();

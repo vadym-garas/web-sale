@@ -93,18 +93,22 @@
 
 
 <script>
+    const UNDEFINED = 0;
+    const LINEAR_METER = 1;
+    const SQUARE_METER = 2;
+    const AMOUNT_PIECE = 3;
 
-        const heightInputElement = document.getElementById('main_height');
-        const widthInputElement = document.getElementById('main_width');
-        const totalPriceElement = document.getElementById('total-price');
-        const discountPersentElement = document.getElementById('discount-p');
-        const discountValueElement = document.getElementById('discount-v');
-        const withDiscountElement = document.getElementById('with-discount');
-        const totalAmountElement = document.getElementById('amount');
-        const valueResultElement = document.getElementById('value-result');
+    const heightInputElement = document.getElementById('main_height');
+    const widthInputElement = document.getElementById('main_width');
+    const totalPriceElement = document.getElementById('total-price');
+    const discountPersentElement = document.getElementById('discount-p');
+    const discountValueElement = document.getElementById('discount-v');
+    const withDiscountElement = document.getElementById('with-discount');
+    const totalAmountElement = document.getElementById('amount');
+    const valueResultElement = document.getElementById('value-result');
 
-        const radioButtons = document.querySelectorAll('input[type="radio"][value]');
-        const inputButtons = document.querySelectorAll('input.price_calc[type="number"][value]');
+    const radioButtons = document.querySelectorAll('input[type="radio"][value]');
+    const inputButtons = document.querySelectorAll('input.price_calc[type="number"][value]');
 
         // get all the radio buttons with data-price attribute
         // const radioButtons = document.querySelectorAll('input[type="radio"][data-price]');
@@ -194,10 +198,12 @@
             let name =  JSON.stringify(button.dataset.name);
 
             if (Number.isInteger(price)) {
-                if (unit === 1) {
+                if (unit === LINEAR_METER) {
                     totalPrice += price * perimeter;
-                } else if (unit === 2) {
+                } else if (unit === SQUARE_METER) {
                     totalPrice += price * area;
+                } else if (unit === AMOUNT_PIECE) {
+                    totalPrice += price;
                 }
                 console.log(name, price);
             } else {

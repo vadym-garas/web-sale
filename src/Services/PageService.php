@@ -57,6 +57,7 @@ class PageService extends AbstractEntityService
 //        try {
             $page = new Page();
             $choices = $getParam('choices');
+            $range = (int)$getParam('range');
 
             $this->addNewCategoryToPage($page, $categories, $choices);
 
@@ -72,7 +73,8 @@ class PageService extends AbstractEntityService
         try {
             $page
                 ->setName((string)$getParam('name'))
-                ->setState((int)$getParam('state'));
+                ->setState((int)$getParam('state'))
+                ->setRange((int)$getParam('range'));
             $this->save($page);
 
             return $page;

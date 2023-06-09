@@ -12,32 +12,38 @@
 {#            {{ form_start(form) }}#}
 
             <b><legend class="col-form-label">Выбрать категорию товара</legend></b>
-            <div class="input-group">
+            <div class="form-check form-check-inline">
+{#                <label class="form-check-label">#}
+{#                    <input checked value="0" class="form-check-input" type="radio" name="category">#}
+{#                    нет#}
+{#                </label>#}
+
                 {% for key,value in categories %}
                     {% set checked = '' %}
                     {% if (select == key) %}
                         {% set checked = 'checked' %}
                     {% endif %}
-                    <div class="form-check form-check-inline">
+
                         <label class="form-check-label">
                             <input {{ checked }} value={{ key }} class="form-check-input" type="radio" name="category">
                             {{ value }}
                         </label>
-                    </div>
+
                 {% endfor %}
+            </div>
 {#                {% for category in categories %}#}
 {#                    {% set checked = '' %}#}
-{#                    {% if (select == category.getId()) %}#}
+{#                    {% if (select == category.id) %}#}
 {#                        {% set checked = 'checked' %}#}
 {#                    {% endif %}#}
 {#                    <div class="form-check form-check-inline">#}
 {#                        <label class="form-check-label">#}
-{#                            <input {{ checked }} value={{ category.getId() }} class="form-check-input" type="radio" name="categories">#}
-{#                            {{ category.getName() }}#}
+{#                            <input {{ checked }} value={{ category.id }} class="form-check-input" type="radio" name="category">#}
+{#                            {{ category.name }}#}
 {#                        </label>#}
 {#                    </div>#}
 {#                {% endfor %}#}
-            </div>
+{#            </div>#}
             <hr>
 
 

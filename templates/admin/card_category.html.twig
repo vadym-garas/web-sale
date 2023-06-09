@@ -9,11 +9,23 @@
     <b><legend class="col-form-label">Select Category Page</legend></b>
     <hr>
 
-    <div class="form-group input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Название категории</span>
+    <div class="row">
+        <div class="col  col-md-3">
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Порядок сортировки</span>
+                </div>
+                <input name="range" type="number" class="form-control" value="{{ range }}">
+            </div>
         </div>
-        <input name="name" value="{{ name }}" type="text" class="form-control input-group-prepend" placeholder="input category name">
+        <div class="col  col-md-9">
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Название категории</span>
+                </div>
+                <input name="name" value="{{ name }}" type="text" class="form-control input-group-prepend" placeholder="input category name">
+            </div>
+        </div>
     </div>
 
     <br>

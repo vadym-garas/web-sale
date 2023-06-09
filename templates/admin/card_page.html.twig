@@ -9,12 +9,33 @@
     <b><legend class="col-form-label">Select Category Page</legend></b>
     <hr>
 
-    <div class="form-group input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Название страницы</span>
+{#    <div class="form-group input-group">#}
+{#        <div class="input-group-prepend">#}
+{#            <span class="input-group-text">Название страницы</span>#}
+{#        </div>#}
+{#        <input name="name" value="{{ page.name }}" type="text" class="form-control input-group-prepend" placeholder="input page name">#}
+{#    </div>#}
+
+    <div class="row">
+        <div class="col  col-md-3">
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Порядок сортировки</span>
+                </div>
+                <input name="range" type="number" class="form-control" value="{{ page.range }}">
+            </div>
         </div>
-        <input name="name" value="{{ page.name }}" type="text" class="form-control input-group-prepend" placeholder="input page name">
+        <div class="col  col-md-9">
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Название страницы</span>
+                </div>
+                <input name="name" value="{{ page.name }}" type="text" class="form-control input-group-prepend" placeholder="input page name">
+            </div>
+        </div>
     </div>
+
+
 
     <br>
     <hr>

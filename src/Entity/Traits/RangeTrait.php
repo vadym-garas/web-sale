@@ -24,7 +24,7 @@ trait RangeTrait
     /**
      * @return int
      */
-    public function getOrderRange(): int
+    public function getRange(): int
     {
         return $this->order_range;
     }
@@ -33,7 +33,7 @@ trait RangeTrait
      * @param int $order_range
      * @return RangeTrait|Category|Page|Product
      */
-    public function setOrderRange(int $order_range=0): self
+    public function setRange(int $order_range=0): self
     {
         $this->order_range = $order_range;
 

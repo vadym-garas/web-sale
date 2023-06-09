@@ -82,6 +82,7 @@ class AdminController extends AbstractController
                     'name' => null,
                     'price' => null,
                     'cost' => null,
+                    //'categories' => $this->categoryService->getAllCategory(),
                     'categories' => $this->categoryService->getArrValueCategoryDetail(),
                     'select' => Category::WITHOUT_CATEGORY,
                 ];
@@ -101,16 +102,19 @@ class AdminController extends AbstractController
     public function createProductAction(Request $request): Response
     {
         try {
-            $this->productService->createProduct(function ($key) use ($request) {
-                return $request->request->get($key);
-            });
-            $response = $this->redirectToRoute('all_product');
-
+            $category = $this->categoryService->getCategoryById($request->request->get('category'));
         } catch (\Throwable $e) {
             $template = 'error.html.twig';
             $response = $this->render($template, [
                 'error' => new Response($e->getMessage(), 400)
             ]);
+        } finally {
+            $category = $this->categoryService->getCategoryById();
+
+            $this->productService->createProduct(function ($key) use ($request) {
+                return $request->request->get($key);
+            }, $category);
+            $response = $this->redirectToRoute('all_product');
         }
         return $response;
     }
@@ -131,6 +135,7 @@ class AdminController extends AbstractController
                     'name' => $product->getName(),
                     'price' => $product->getPrice(),
                     'cost' => $product->getCost(),
+                    //'categories' => $this->categoryService->getAllCategory(),
                     'categories' => $this->categoryService->getArrValueCategoryDetail(),
                     'select' => $product->getCategory()->getId(),
                 ];
@@ -151,7 +156,7 @@ class AdminController extends AbstractController
     public function updateProductAction(Request $request, $product_id): Response
     {
         try {
-            echo 'Category current: ' . $currCategoryId = $request->request->get('categories');
+            echo 'Category current: ' . $currCategoryId = $request->request->get('category');
             $currCategory = $this->categoryService->getCategoryById($currCategoryId);
 
             $this->productService->updateProductById(function ($key) use ($request) {
@@ -218,7 +223,6 @@ class AdminController extends AbstractController
             ]);
     }
 
-
     #[Route('/category', name: 'add_category', methods: ['get'])]
     public function addCategoryAction(Request $request): Response
     {
@@ -230,6 +234,7 @@ class AdminController extends AbstractController
             'units' => Unit::getArrUnitConstant(),
             'unit' => Unit::UNDEFINED,
             'name' => '',
+            'range' => 0
         ];
 
         $template = 'admin/card_category.html.twig';
@@ -271,6 +276,7 @@ class AdminController extends AbstractController
                     'unit' => $category->getUnit(),
                     'state' => $category->getState(),
                     'name' => $category->getName(),
+                    'range' => $category->getRange()
             ];
             $template = 'admin/card_category.html.twig';
 
@@ -291,6 +297,8 @@ class AdminController extends AbstractController
     public function updateCategoryAction(Request $request, $category_id): Response
     {
         try {
+            echo 'form updateCategoryById'.$request->request->get('range');
+
             $this->categoryService->updateCategoryById($category_id, function ($key) use ($request) {
                 return $request->request->get($key);
             });
